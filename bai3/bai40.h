@@ -2,14 +2,16 @@
 
 #pragma once
 float sn40(int n) {
-  float result = 0;
-  float temp = 1;
-  int i = 1;
+    float result = 0;
+    float temp = 1;
+    int i = 1;
 
-  while (i <= n) {
-    temp *= n;
-    result = sqrt(temp + result);
-    ++i;
-  }
-  return result;
+    while (i <= n)
+    {
+        temp *= n;
+        result = sqrt(temp + result);
+        // fix
+        ++i;
+    }
+    return result;
 }

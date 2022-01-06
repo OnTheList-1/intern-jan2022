@@ -4,10 +4,12 @@
 #pragma once
 
 int sn42(int n) {
-  int result = 0;
-  int i = 0;
-  while (i < n) {
-    result += ++i;
-  }
-  return result;
+    int result = 0;
+    int i = 0;
+    while (i < n)
+    {
+        result += i++;
+        if (result > n)
+            return i - 1;
+    }
 }

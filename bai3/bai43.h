@@ -2,10 +2,11 @@
 #pragma once
 
 int sn43(int n) {
-  int result = 0;
-  while (n > 0) {
-    n /= 10;
-    ++result;
-  }
-  return result;
+    int result = 0;
+    while (n > 0)
+    {
+        n /= 10;
+        ++result;
+    }
+    return result;
 }

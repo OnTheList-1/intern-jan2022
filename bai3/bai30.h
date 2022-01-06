@@ -3,19 +3,14 @@
 #pragma once
 
 bool sn30(int n) {
-  int i = 1;
-  int sum = 0;
-  bool flag;
-  while (i < n) {
-    if (n % i == 0) {
-      sum += i;
+    int i = 1;
+    int sum = 0;
+    while (i < n) {
+        if (n % i == 0)
+            sum += i;
+
+        ++i;
     }
-    ++i;
-  }
-  if (n == sum) {
-    flag = true;
-  } else {
-    flag = false;
-  }
-  return flag;
+
+    return n == sum;
 }

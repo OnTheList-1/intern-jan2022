@@ -2,11 +2,12 @@
 
 #pragma once
 std::vector<int> sn20(int n) {
-  std::vector<int> result;
-  for (int i = 1; i < n; ++i) {
-    if (n % i == 0) {
-      result.push_back(i);
+    std::vector<int> result;
+    for (int i = 1; i < n; ++i)
+    {
+        if (n % i == 0)
+            result.push_back(i);
+
     }
-  }
-  return result;
+    return result;
 }

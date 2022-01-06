@@ -2,12 +2,12 @@
 // phương hay không ?
 
 #pragma once
-
+#include <cmath>
 bool sn32(int n) {
-  bool flag = false;
-  if (floor((double)sqrt(n)) == ceil((double)sqrt(n))) {
-    flag = true;
-  }
+    bool flag = false;
+    if (floor((double)sqrt(n)) == ceil((double)sqrt(n)))
+        flag = true;
 
-  return flag;
+
+    return flag;
 }

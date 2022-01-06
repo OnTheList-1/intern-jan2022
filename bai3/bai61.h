@@ -4,16 +4,16 @@
 #pragma once
 
 bool sn61(int n) {
-  bool flag = true;
-  int i = n % 10;
-  n /= 10;
-  while (n > 0) {
-    if (i > n % 10) {
-      flag = false;
-    }
-    i = n % 10;
+    int currentDigit = n % 10;
     n /= 10;
-  }
+    while (n > 0)
+    {
+        if (currentDigit > n % 10)
+            return false;
 
-  return flag;
+        currentDigit = n % 10;
+        n /= 10;
+    }
+
+    return true;
 }

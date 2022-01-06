@@ -1,12 +1,28 @@
-﻿// 66. Giải phương trình 𝑎𝑥4 + 𝑏𝑥 2 + 𝑐 = 0.
+﻿// 65. Giải phương trình 𝑎𝑥2 + 𝑏𝑥 + 𝑐 = 0.
 
 #pragma once
 
-std::vector<float> sn65(int a, int b, int c) {
-  std::vector<float> result;
-  float deltaPos = (-b + (pow(b, 2) - 4 * a * c)) / (2 * a);
-  float deltaNeg = (-b - (pow(b, 2) - 4 * a * c)) / (2 * a);
-  result.push_back(deltaPos);
-  result.push_back(deltaNeg);
-  return result;
+void sn65(int a, int b, int c)
+{
+    double delta = (b * b) - (4 * a * c);
+    if (delta > 0)
+    {
+        double x1 = (-b + sqrt(delta)) / (2 * a);
+        double x2 = (-b - sqrt(delta)) / (2 * a);
+        std::cout << "x1 = " << x1 << std::endl;
+        std::cout << "x2 = " << x2 << std::endl;
+    }
+    else if (delta == 0)
+    {
+        double x1 = (-b + sqrt(delta)) / (2 * a);
+        std::cout << "x1 = " << x1 << std::endl;
+    }
+    else
+    {
+        int realNumber = -b / (2 * a);
+        int imaginary = sqrt(-delta) / (2 * a);
+        std::cout << "x1 = " << realNumber << " + " << imaginary << "i\n";
+        std::cout << "x2 = " << realNumber << " - " << imaginary << "i\n";
+    }
 }
+

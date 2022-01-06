@@ -3,11 +3,12 @@
 #pragma once
 
 int sn29(int n) {
-  int i = n;
-  while (i > 0) {
-    if (n % i == 0 && i % 2 != 0) {
-      return i;
+    int i = n;
+    while (i > 0)
+    {
+        if (n % i == 0 && i % 2 != 0)
+            return i;
+
+        --i;
     }
-    --i;
-  }
 }
