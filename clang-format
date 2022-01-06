@@ -1,0 +1,102 @@
+﻿---
+# Visual Studio generated .clang-format file
+
+# Need the latest clang-format.exe at the end of https://llvm.org/builds/
+
+TabWidth: 4
+UseTab: Never
+# Use in combination with PenaltyExcessCharacter so that we can reach around 120 characters
+ColumnLimit: 110
+UseCRLF: true
+
+Language: Cpp
+Standard: c++14
+
+AccessModifierOffset: -4
+AlignConsecutiveMacros: true
+AlignEscapedNewlines: Right
+AlignOperands: true
+AlignAfterOpenBracket: Align
+AlignTrailingComments: true
+
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+# AllowShortCaseLabelsOnASingleLine: false
+AllowShortLambdasOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: false
+# AllowAllConstructorInitializersOnNextLine: true
+# AllowAllParametersOfDeclarationOnNextLine: true
+
+AlwaysBreakTemplateDeclarations: Yes
+
+# Set PenaltyBreakComment when BreakStringLiterals = true to avoid breaking if possible
+BreakStringLiterals: true
+BasedOnStyle: Microsoft
+
+# Enable bin packing because currently our code contains lots of arguments per line
+BinPackArguments: true
+BinPackParameters: true
+
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  AfterUnion: true
+  BeforeCatch: true
+  BeforeElse: true
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: true
+
+BreakBeforeBraces: Allman
+# BreakBeforeBinaryOperators: NonAssignment
+BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: BeforeComma
+Cpp11BracedListStyle: false
+
+# Namespace options
+FixNamespaceComments: false
+NamespaceIndentation: All
+CompactNamespaces: false
+
+IndentCaseLabels: true
+IndentPPDirectives: None
+IndentWidth: 4
+PointerAlignment: Right
+SortIncludes: false
+SortUsingDeclarations: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+
+ForEachMacros: ['BOOST_FOREACH']
+TypenameMacros: ['STACK_OF', 'LIST_ENTRY']
+IncludeBlocks: Preserve
+MaxEmptyLinesToKeep: 2
+ReflowComments: false
+
+# Spaces
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeRangeBasedForLoopColon: true
+SpacesInAngles: false
+SpaceAfterCStyleCast: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: Never
+SpaceInEmptyParentheses: false
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+SpacesBeforeTrailingComments: 1
+
+# Penalties
+PenaltyBreakAssignment: 15
+PenaltyExcessCharacter: 8
+PenaltyBreakBeforeFirstCallParameter: 15
+PenaltyBreakFirstLessLess: 15
+PenaltyBreakComment: 20
+PenaltyBreakString: 60
+
+...
