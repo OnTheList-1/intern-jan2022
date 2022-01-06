@@ -69,4 +69,6 @@ int main() {
     sn65(1, 5, 6);
 
     std::cout << "\nBai 75: n = 15; ans = " << sn75(15) << ", n = 16; ans = " << sn75(16) << ", n = 64; ans = " << sn75(64) << std::endl; // bai 75
+
+    return 0;
 }
