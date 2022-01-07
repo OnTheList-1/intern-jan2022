@@ -2,7 +2,7 @@
 
 #pragma once
 
-int maxNum(int a, int b, int c)
+float maxNum(float a, float b, float c)
 {
     int max = a;
     if (max < b)

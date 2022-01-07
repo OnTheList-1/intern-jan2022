@@ -66,7 +66,7 @@ void printTriangleD(int h)
 {
     std::cout << "D. Tam giac vuong can rong.\n\n";
     for (int i = 1; i <= h; ++i) {
-        if (i > 1) {
+        if (i > 1 && i < h) {
             std::cout << "*";
         }
 

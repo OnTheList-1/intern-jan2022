@@ -4,9 +4,9 @@
 
 void findChange() {
     int countWays = 0;
-    for (int i = 0; i < 200; ++i) {
-        for (int j = 0; j < 100; ++j) {
-            for (int k = 0; k < 40; ++k) {
+    for (int i = 0; i <= 200; ++i) {
+        for (int j = 0; j <= 100; ++j) {
+            for (int k = 0; k <= 40; ++k) {
                 if (i * 1000 + j * 1000 + k * 1000 == 200000) {
                     std::cout << ++countWays << ". 1000d = " << i << "\t" << "2000d = " << j << "\t" << "5000d = " << k << "\t" << std::endl;
                 }

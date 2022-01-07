@@ -4,8 +4,8 @@
 
 std::string checkSign()
 {
-    int n1;
-    int n2;
+    float n1;
+    float n2;
     std::cout << "So 1: ";
     std::cin >> n1;
     std::cout << "So 2: ";

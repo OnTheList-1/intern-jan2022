@@ -3,7 +3,7 @@
 #pragma once
 
 int gcd(int a, int b) {
-    for (int i = std::max(a, b); i > 0; --i) {
+    for (int i = std::min(a, b); i > 0; --i) {
         if (a % i == 0 && b % i == 0)
             return i;
     }
