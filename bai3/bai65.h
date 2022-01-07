@@ -7,8 +7,11 @@ void sn65(int a, int b, int c)
     double delta = (b * b) - (4 * a * c);
     if (a == 0)
     {
-        double x1 = -c / b;
-        std::cout << "x1 = " << x1 << std::endl;
+        if (b != 0)
+        {
+            double x1 = -c / b;
+            std::cout << "x1 = " << x1 << std::endl;
+        }
 
     }
     else if (delta > 0)
