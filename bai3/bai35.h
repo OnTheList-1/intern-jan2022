@@ -3,11 +3,11 @@
 #pragma once
 double sn35(int n) {
     double result = 0;
-    int i = 1;
-    while (i <= n)
+    int i = n;
+    while (i >= 1)
     {
         result = sqrt(i + result); // Reverse function
-        ++i;
+        --i;
     }
     return result;
 }

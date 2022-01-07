@@ -3,16 +3,15 @@
 #pragma once
 
 bool sn75(int n) {
-    bool flag = true;
     n = (n < 0) ? -n : n;
     if (n < 2)
-        return 1;
+        return true;
     while (n > 1)
     {
         if (n % 2 != 0)
-            flag = false;
+            return false;
         n /= 2;
     }
 
-    return flag;
+    return true;
 }

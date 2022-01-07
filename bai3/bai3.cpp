@@ -37,7 +37,7 @@ int main() {
     printf("Bai 2: S(1) = %i; S(5) = %i; S(50) = %i\n", sn2(1), sn2(5), sn2(50)); //bai 2
     printf("Bai 3: S(1) = %f, S(5) = %f; S(50) = %f\n", sn3(1), sn3(5), sn3(50)); //bai 3
     printf("Bai 9: S(1) = %i, S(5) = %i; S(10) = %i\n", sn9(1), sn9(5), sn9(10)); //bai 9
-    printf("Bai 10: S(1, 5) = %i, S(5, 4) = %i, S(15, 0) = %i\n", sn10(1, 5), sn10(5, 4), sn10(15, 0)); //bai 10
+    printf("Bai 10: S(1, 5) = %f, S(5, 4) = %f, S(15, 0) = %f\n", sn10(1, 5), sn10(5, 4), sn10(15, 0)); //bai 10
     printf("Bai 15: S(1) = %f, S(5) = %f, S(20) = %f\n", sn15(1), sn15(5), sn15(20)); //bai 15
 
     std::vector<int> bai20 = sn20(40); //bai 20

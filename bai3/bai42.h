@@ -10,6 +10,6 @@ int sn42(int n) {
     {
         result += i++;
         if (result > n)
-            return i - 1;
+            return i - 2;
     }
 }

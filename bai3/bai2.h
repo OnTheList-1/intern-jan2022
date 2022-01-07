@@ -7,6 +7,7 @@ int sn2(int n)
     for (int i = 1; i <= n; ++i)
     {
         result += i * i;
+
     }
 
     return result;
