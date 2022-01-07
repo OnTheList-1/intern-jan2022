@@ -12,6 +12,10 @@ void sn65(int a, int b, int c)
             double x1 = -c / b;
             std::cout << "x1 = " << x1 << std::endl;
         }
+        else
+        {
+            std::cout << "no roots" << std::endl;
+        }
 
     }
     else if (delta > 0)

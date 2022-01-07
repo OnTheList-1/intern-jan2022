@@ -7,7 +7,7 @@ float sn41(int n) {
     int i = 0;
     while (i < n)
     {
-        result = (1.0 / 1.0 + result);
+        result = 1.0 / (1.0 + result);
         ++i;
     }
 
