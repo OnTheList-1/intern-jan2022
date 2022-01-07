@@ -335,10 +335,10 @@ float closestMinX()
 }
 
 int main() {
-    //std::cout << "Bai 115: \n"; //bai 115
-    //avgGrade();
-    //std::cout << "\n\nBai 122:\n"; //bai 122
-    //maxNum();
+    std::cout << "Bai 115: \n"; //bai 115
+    avgGrade();
+    std::cout << "\n\nBai 122:\n"; //bai 122
+    maxNum();
     std::cout << "\nBai 123:\n"; //bai 123
     minNumPos();
     std::cout << "\nBai127: Sort\n"; //bai 127
@@ -351,9 +351,9 @@ int main() {
     std::cout << "\nLast Position is " << lastPerfectNumberPos() << "\n"; //bai137
     std::cout << "Bai 141: Find the position of the smallest positive number\n"; //bai 141
     std::cout << "Smallest positive number's position is " << smallestPositiveNumberPos() << "\n";
-    std::cout << "Bai 150: Find the biggest negative number\n"; //bai 150
-    std::cout << "Biggest negative number is " << biggestNegativeNumber() << "\n";
-    std::cout << "Bai 156: Find the closest value to X\n"; //bai 156
+    std::cout << "\nBai 150: Find the biggest negative number\n"; //bai 150
+    std::cout << "\nBiggest negative number is " << biggestNegativeNumber() << "\n";
+    std::cout << "\nBai 156: Find the closest value to X\n"; //bai 156
     std::cout << closestMinX();
 
     return 0;
