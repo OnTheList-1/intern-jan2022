@@ -2,7 +2,7 @@
 
 #pragma once
 
-void sn65(int a, int b, int c)
+void sn65(float a, float b, float c)
 {
     double delta = (b * b) - (4 * a * c);
     if (a == 0)
