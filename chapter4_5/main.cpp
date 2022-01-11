@@ -11,7 +11,7 @@ int main() {
     insertVector(floatType);
 
     std::cout << "\nBai 115: \n"; //bai 115
-    std::cout << "Answer: " << avgGrade();
+    std::cout << "Answer: " << avgGrade() << "\n";
 
     std::cout << "\n\nBai 122:\n"; //bai 122
     std::cout << "Answer: " << maxNum(floatType);
@@ -44,7 +44,7 @@ int main() {
     std::cout << "Answer: " << closestMinX(floatType);
 
     std::cout << "\n\nBai 157: Print [a,b] in the array.\n"; //bai 157
-    printRange(floatType, 3.5, 4); //print [3.5, 4] in the array
+    printRange(floatType); //print [3.5, 4] in the array
 
     std::cout << "\n\nBai 158: Find if the array contain X where X is the product of [x - 1] && [x + 1] \n"; //bai 162
     std::cout << "Answer: " << productNearby(intType) << "\n";
@@ -98,6 +98,27 @@ int main() {
 
     std::cout << "\nBai 231: List all unique elements in the array.\n";
     listDistinctElements(floatType);
+
+    std::cout << "\nBai 236: Count the number of times A appears in B.\n";
+    std::vector<float> floatTypeExample{ 10, 12, 12.2, 13, 15 };
+    std::cout << "Answer: " << countAinB(floatType, floatTypeExample) << std::endl;
+
+    std::cout << "\nBai 238: List the mode in the array.\n";
+    listModeInArray(intType);
+
+    std::cout << "\n\nBai 241: Consecutive Zeros\n";
+    std::cout << "Answer: " << isConsecutiveZeros(intType) << "\n";
+
+    std::cout << "\nBai 246: Symetrical Array\n";
+    std::cout << "Answer : " << isSymetricalArray(floatType) << "\n";
+
+    std::cout << "\nBai 249: Descending Array\n";
+    std::cout << "Answer: " << isDescendingArray(floatType) << "\n";
+
+    std::cout << "\nBai 256: Sort Array Descending\n";
+    std::vector<float> copy256(floatType.begin(), floatType.end());
+    sortArrayDescending(copy256);
+
 
     return 0;
 }

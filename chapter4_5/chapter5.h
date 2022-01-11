@@ -41,7 +41,7 @@ int lastPerfectNumberPos(const std::vector<int>&); //bai 139
 int smallestPositiveNumberPos(const std::vector<float>&); //bai141
 float biggestNegativeNumber(const std::vector<float>&); //bai 150
 int closestMinX(const std::vector<float>&); //bai 156
-void printRange(const std::vector<float>&, const float&, const float&); //bai 157
+void printRange(const std::vector<float>&); //bai 157
 int productNearby(const std::vector<int>&); //bai 162
 int baseTwoInArray(const std::vector<int>&); //bai 166
 int biggestEvenLessThanOdd(const std::vector<int>&); //bai 169
@@ -60,4 +60,9 @@ int compareCountOddEven(const std::vector<int>&); //bai 221
 int countNextToEven(const std::vector<int>&); // bai 226
 void countDistinctElement(const std::vector<float>&); //bai 230
 void listDistinctElements(const std::vector<float>&); //bai 231
-
+int countAinB(const std::vector<float>&, const std::vector<float>&); //bai 236
+void listModeInArray(const std::vector<int>&); //bai 238
+bool isConsecutiveZeros(const std::vector<int>&); //bai 241
+bool isSymetricalArray(const std::vector<float>&); //bai 246
+bool isDescendingArray(const std::vector<float>&); //bai 249
+void sortArrayDescending(std::vector<float>&); //bai 256

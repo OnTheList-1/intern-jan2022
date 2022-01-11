@@ -10,7 +10,8 @@
 
 bool isOdd(const int& a)
 {
-    if (a % 2 == 1) return true;
+    if (a % 2 == 1)
+        return true;
     return false;
 }
 
@@ -21,6 +22,7 @@ float avgGrade()
     float gradeB = 0;
 
     std::cout << "Ho va Ten: ";
+    std::cin >> std::ws;
     std::getline(std::cin, name);
 
     std::cout << "Diem Toan: ";
@@ -183,13 +185,11 @@ int closestMinX(const std::vector<float>& array) //bai 156
     return index;
 }
 
-void printRange(const std::vector<float>& array, const float& a, const float& b)
+void printRange(const std::vector<float>& array)
 {
-    for (int i = 0; i < array.size(); ++i) {
-        if (array[i] >= a && array[i] <= b)
-            std::cout << array[i] << " ";
-    }
-
+    std::vector<float> copy(array.begin(), array.end());
+    sortArr(copy);
+    std::cout << "Min: " << copy[0] << "; Max = " << copy[copy.size() - 1] << "\n";
 }
 
 int productNearby(const std::vector<int>& array)
@@ -218,11 +218,11 @@ int baseTwoInArray(const std::vector<int>& array) //bai 166
             n /= 2;
         }
         if (check == true) {
-            return n;
+            return array[i];
         }
     }
 
-    return -1;
+    return 0;
 }
 
 int biggestEvenLessThanOdd(const std::vector<int>& array) //bai 169
@@ -258,7 +258,7 @@ int findLeastFrequency(const std::vector<int>& array)
         }
     }
 
-    int leastOccurrence = v[array[0] % 10]; //get existing element where > 0
+    int leastOccurrence = array[0] % 10; //get existing element where > 0
     for (int i = 0; i < v.size(); ++i)
     {
         if (v[i] != 0)
@@ -280,11 +280,8 @@ void listAllPairs(std::vector<float> array)
         {
             for (int j = i + 1; j < array.size(); ++j)
             {
-                if (array[i] <= array[j])
-                {
-                    result.push_back(array[i]);
-                    result.push_back(array[j]);
-                }
+                result.push_back(array[i]);
+                result.push_back(array[j]);
             }
         }
 
@@ -304,27 +301,27 @@ void listPairClosest(const std::vector<float>& array)
 {
     float minDistance = abs(array[1] - array[0]);
     std::vector<int> distancePairs;
+    int index0 = 1;
+    int index1 = 0;
 
     //find min distance
     for (int i = 0; i < array.size(); ++i)
     {
-        for (int j = i + 1; j < array.size() - 1; ++j)
-        {
-            if (abs(array[i] - array[j]) < minDistance)
-                minDistance = abs(array[i] - array[j]);
-        }
-
-    }
-
-    //map min with min distance
-    for (int i = 0; i < array.size(); ++i)
-    {
         for (int j = i + 1; j < array.size(); ++j)
         {
-            if (minDistance == abs(array[i] - array[j]))
-                std::cout << "Answer: (" << array[i] << ", " << array[j] << ")\n";
+            if (abs(array[i] - array[j]) < minDistance) {
+                minDistance = abs(array[i] - array[j]);
+                index0 = i;
+                index1 = j;
+            }
+
         }
+
     }
+
+    std::cout << index0 << " " << index1;
+
+    std::cout << "Answer: (" << array[index0] << ", " << array[index1] << ")\n";
 }
 
 void bai180(const std::vector<float>& array)
@@ -333,7 +330,7 @@ void bai180(const std::vector<float>& array)
 
     for (int i = 1; i < array.size() - 1; ++i)
     {
-        if (array[i] > abs(array[i - 1]) && array[i] < abs(array[i + 1]))
+        if (array[i] > array[i - 1] && array[i] < abs(array[i + 1]))
             std::cout << array[i] << " ";
     }
 }
@@ -409,9 +406,17 @@ int sumFirstDigitOdd(const std::vector<int>& array)
 
     for (int i = 0; i < array.size(); ++i)
     {
+        bool checkOdd = false;
         int copy = array[i];
 
-        if (isOdd(copy) == true)
+        while (copy > 0)
+        {
+            if (isOdd(copy) && copy < 10)
+                checkOdd = isOdd(copy);
+            copy /= 10;
+        }
+
+        if (checkOdd)
             sum += array[i];
     }
     return sum;
@@ -435,16 +440,16 @@ float sumExtremeElement(const std::vector<float>& array)
 float findAvgDistanceBetweenElements(const std::vector<float>& array)
 {
     float avg = 0;
-
+    int count = 0;
     for (int i = 0; i < array.size() - 1; ++i)
     {
         for (int j = i + 1; j < array.size(); ++j)
         {
             avg += abs(array[i] - array[j]);
+            ++count;
         }
     }
-
-    avg /= array.size() - 1;
+    avg /= count;
     return avg;
 }
 
@@ -518,4 +523,85 @@ void listDistinctElements(const std::vector<float>& array)
             std::cout << itr->first << " ";
 
     }
+}
+
+int countAinB(const std::vector<float>& array1, const std::vector<float>& array2)
+{
+    std::map<float, int> m;
+    for (int i = 0; i < array1.size(); ++i)
+        m[array1[i]]++;
+
+    for (int i = 0; i < array2.size(); ++i)
+        m[array2[i]]++;
+
+    int countMin = -1;
+
+    for (const auto& itr : m)
+    {
+        if (countMin < 0)
+            countMin = itr.second;
+
+        countMin = std::min(countMin, itr.second);
+    }
+
+    return (countMin > 1) ? --countMin : 0;
+}
+
+void listModeInArray(const std::vector<int>& array)
+{
+    int occurrence = 0;
+    std::map<int, int> m;
+
+    for (int i = 0; i < array.size(); ++i)
+        m[array[i]]++;
+
+    for (const auto& itr : m)
+    {
+        occurrence = std::max(occurrence, itr.second);
+    }
+
+    for (const auto& itr1 : m)
+    {
+        if (itr1.second == occurrence)
+            std::cout << itr1.first << " ";
+    }
+}
+
+bool isConsecutiveZeros(const std::vector<int>& array)
+{
+    for (int i = 0; i < array.size() - 1; ++i)
+    {
+        if (array[i] == 0 && array[i + 1] == 0)
+            return true;
+    }
+
+    return false;
+}
+
+bool isSymetricalArray(const std::vector<float>& array)
+{
+    for (int i = 0; i < array.size() / 2; ++i)
+    {
+        if (array[i] != array[array.size() - i - 1])
+            return false;
+    }
+    return true;
+
+}
+
+bool isDescendingArray(const std::vector<float>& array)
+{
+    for (int i = 1; i < array.size(); ++i)
+    {
+        if (array[i] > array[i - 1])
+            return false;
+    }
+
+    return true;
+}
+
+void sortArrayDescending(std::vector<float>& array)
+{
+    sort(array.begin(), array.end(), std::greater <>());
+    printVector(array);
 }
