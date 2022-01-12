@@ -1,360 +1,103 @@
 #include <iostream>
-#include <algorithm>
-#include <cmath>
-#include <vector>
-#include <string>
-#include <array>
-
-#include "Header1.h"
-
-void avgGrade(void)
-{ //bai 115
-    std::string name = "";
-    int gradeA = 0;
-    int gradeB = 0;
-    double avgGrade;
-
-    std::cout << "Ho va Ten: ";
-    std::getline(std::cin, name);
-
-    std::cout << "Diem Toan: ";
-    std::cin >> gradeA;
-
-    std::cout << "Diem van:  ";
-    std::cin >> gradeB;
-    avgGrade = (gradeA + gradeB) / 2.0;
-    std::cout << "\nDiem Trung Binh = " << avgGrade;
-
-};
-
-void maxNum(void) // bai 122
-{
-    int arrLength = 0;
-    int i = 0;
-    float* arr;
-
-    std::cout << "Size array: ";
-    std::cin >> arrLength;
-
-    arr = new float[arrLength];
-
-    do
-    {
-        std::cin >> arr[i];
-        ++i;
-
-    } while (i < arrLength);
-
-    float max = arr[0];
-
-    for (int i = 1; i < arrLength; ++i)
-    {
-        if (max < arr[i])
-            max = arr[i];
-
-    }
-    std::cout << "The biggest number is: " << max << std::endl;
-
-};
-
-void minNumPos(void) //bai 123
-{
-    int arrLength = 0;
-    int i = 0;
-    float* arr;
-    int position = 0;
-
-    std::cout << "Size array: ";
-    std::cin >> arrLength;
-
-    arr = new float[arrLength];
-
-    do
-    {
-        std::cin >> arr[i];
-        ++i;
-
-    } while (i < arrLength);
-
-    float min = arr[0];
-
-    for (int i = 0; i < arrLength; ++i)
-    {
-        if (arr[i] < min)
-        {
-            min = arr[i];
-            position = i;
-        }
-    }
-
-    std::cout << "The position of the min number is:  " << ++position << std::endl;
-};
-
-void sortArr(void)
-{
-    int arrLength = 0;
-    float* arr;
-    int i = 0;
-    std::cout << "Size Array: ";
-    std::cin >> arrLength;
-
-    arr = new float[arrLength];
-
-    do
-    {
-        std::cin >> arr[i];
-        ++i;
-    } while (i < arrLength);
-
-    //bubble sort
-
-    for (int i = 0; i < arrLength; ++i)
-    {
-        for (int j = i + 1; j < arrLength; ++j)
-        {
-            if (arr[i] > arr[j])
-            {
-                float temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-            }
-
-        }
-    }
-
-    for (int i = 0; i < arrLength; ++i)
-    {
-        std::cout << arr[i] << " ";
-    }
-
-}
-
-void listPosNegativeNumber(void)
-{
-    int* arr = nullptr;
-    std::vector<int> negativePos;
-    int arrLength = 0;
-    int i = 0;
-
-    std::cout << "Array Size: ";
-    std::cin >> arrLength;
-    arr = new int[arrLength];
-
-    do
-    {
-        std::cin >> arr[i++];
-    } while (i < arrLength);
-
-    for (int i = 0; i < arrLength; ++i)
-    {
-        if (arr[i] < 0)
-            negativePos.push_back(i); //push index of neg numbers
-    }
-
-    if (negativePos.empty()) //check if empty
-        negativePos.push_back(-1);
-
-    for (auto i : negativePos)
-    {
-        std::cout << ++i << " ";
-    }
-
-};
-
-int findLastEvenNumber(void) //bai 136
-{
-    int arrLength = 0;
-    int i = 0;
-    int* arr;
-
-    std::cout << "Size array: ";
-    std::cin >> arrLength;
-
-    arr = new int[arrLength];
-
-    do
-    {
-        std::cin >> arr[i];
-        ++i;
-
-    } while (i < arrLength);
-
-    for (int i = arrLength - 1; i >= 0; --i)
-    {
-        if (arr[i] % 2 == 0)
-            return ++i;
-    }
-    return -1;
-}
-
-int lastPerfectNumberPos(void)
-{
-    int arrLength = 0;
-    int i = 0;
-    std::vector<int> perfectNumberVec;
-    int perfectNumber = 0;
-
-    int* arr;
-
-    std::cout << "Size array: ";
-    std::cin >> arrLength;
-
-    arr = new int[arrLength];
-
-    do
-    {
-        std::cin >> arr[i++];
-
-    } while (i < arrLength);
-
-    for (int i = 0; i < arrLength; ++i)
-    {
-        for (int j = 1; j < arr[i]; ++j) {
-            if (arr[i] % j == 0)
-                perfectNumber += j;
-        }
-        if (arr[i] == perfectNumber)
-            perfectNumberVec.push_back(perfectNumber);
-        perfectNumber = 0;
-    }
-
-    if (!perfectNumberVec.empty()) {
-        for (int i = 0; i < arrLength; ++i)
-        {
-            if (perfectNumberVec[perfectNumberVec.size() - 1] == arr[i])
-                return ++i;
-        }
-    }
-
-    return -1;
-}
-
-int smallestPositiveNumberPos(void)
-{
-    int arrLength = 0;
-    int i = 0;
-
-    std::cout << "Size array: ";
-    std::cin >> arrLength;
-
-    float* arr = new float[arrLength];
-
-    do
-    {
-        std::cin >> arr[i++];
-
-    } while (i < arrLength);
-
-    float pos = arr[0]; //tracker
-
-    //find smallest number
-    for (int i = 0; i < arrLength; ++i)
-    {
-        if ((pos > arr[i] && arr[i] > 0) || pos < 0)
-            pos = arr[i];
-    }
-    if (pos < 0)
-        return -1;
-
-    //find index
-    for (int i = 0; i < arrLength; ++i)
-    {
-        if (pos == arr[i])
-            return ++i;
-    }
-}
-
-float biggestNegativeNumber(void)
-{
-    int arrLength = 0;
-    int i = 0;
-
-    std::cout << "Size array: ";
-    std::cin >> arrLength;
-
-    float* arr = new float[arrLength];
-
-    do
-    {
-        std::cin >> arr[i++];
-
-    } while (i < arrLength);
-
-    float pos = arr[0]; //tracker
-
-    //find biggest negative number
-    for (int i = 0; i < arrLength; ++i)
-    {
-        if ((pos < arr[i] && arr[i] < 0))
-            pos = arr[i];
-    }
-    if (pos > 0)
-        return -1;
-
-    return pos;
-}
-
-float closestMinX()
-{
-    int arrLength = 0;
-    int i = 0;
-    float x = 0;
-    bool sign;
-
-    std::cout << "Size Array: ";
-    std::cin >> arrLength;
-
-    float* arr = new float[arrLength];
-
-    do
-    {
-        std::cin >> arr[i++];
-
-    } while (i < arrLength);
-
-    std::cout << "Enter value for X: ";
-    std::cin >> x;
-
-    float distance = arr[0];
-
-    for (int i = 1; i < arrLength; ++i)
-    {
-        if (abs(arr[i] - x) < distance) {
-            if (arr[i] - x < 0)
-                sign = true;
-            else
-                sign = false;
-            distance = abs(arr[i] - x);
-        }
-    }
-    //check for arr[0]
-    if (arr[0] - x >= distance)
-        sign = false;
-
-    return (sign) ? x - distance : distance + x;
-}
+#include "chapter5.h"
 
 int main() {
-    std::cout << "Bai 115: \n"; //bai 115
-    avgGrade();
+    std::cout << "---------- Chapter 5 ----------" << "\n\n";
+    std::vector<int> intType;
+    std::vector<float> floatType;
+    std::cout << "Enter a vector containing int datatype: \n\n";
+    insertVector(intType);
+    std::cout << "\nEnter a vector containing float datatype: \n\n";
+    insertVector(floatType);
+
+    std::cout << "\nBai 115: \n"; //bai 115
+    std::cout << "Answer: " << avgGrade() << "\n";
+
     std::cout << "\n\nBai 122:\n"; //bai 122
-    maxNum();
-    std::cout << "\nBai 123:\n"; //bai 123
-    minNumPos();
+    std::cout << "Answer: " << maxNum(floatType);
+
+    std::cout << "\n\nBai 123:\n"; //bai 123
+    std::cout << "Answer: " << minNumPosition(floatType) << "\n";
+
     std::cout << "\nBai127: Sort\n"; //bai 127
-    sortArr();
+    std::vector<float> copy = floatType;
+    sortArr(copy);
+    for (auto i : copy)
+        std::cout << i << " ";
+
     std::cout << "\n\nBai 133\n"; //bai 133
-    listPosNegativeNumber();
+    listPosNegativeNumber(floatType);
+
     std::cout << "\nBai 136: Find the position of the last positive number in an array. \n"; //bai136
-    std::cout << "Last Position is " << findLastEvenNumber() << "\n";
-    std::cout << "\nBai 137: \n";
-    std::cout << "\nLast Position is " << lastPerfectNumberPos() << "\n"; //bai137
-    std::cout << "Bai 141: Find the position of the smallest positive number\n"; //bai 141
-    std::cout << "Smallest positive number's position is " << smallestPositiveNumberPos() << "\n";
-    std::cout << "\nBai 150: Find the biggest negative number\n"; //bai 150
-    std::cout << "\nBiggest negative number is " << biggestNegativeNumber() << "\n";
+    std::cout << "Last Position is " << findLastEvenNumber(intType) << "\n";
+
+    std::cout << "\nBai 137:";
+    std::cout << "\nLast Position is " << lastPerfectNumberPos(intType) << "\n"; //bai137
+
+    std::cout << "\nBai 141: Find the position of the smallest positive number\n"; //bai 141
+    std::cout << "Smallest positive number's position is: " << smallestPositiveNumberPos(floatType) << "\n";
+
+    std::cout << "\nBai 150: Find the biggest negative number"; //bai 150
+    std::cout << "\nBiggest negative number is " << biggestNegativeNumber(floatType) << "\n";
+
     std::cout << "\nBai 156: Find the closest value to X\n"; //bai 156
-    std::cout << closestMinX();
+    std::cout << "Answer: " << closestMinX(floatType);
+
+    std::cout << "\n\nBai 157: Print [a,b] in the array.\n"; //bai 157
+    printRange(floatType); //print [3.5, 4] in the array
+
+    std::cout << "\n\nBai 158: Find if the array contain X where X is the product of [x - 1] && [x + 1] \n"; //bai 162
+    std::cout << "Answer: " << productNearby(intType) << "\n";
+
+    std::cout << "\nBai 166: Find if the array contain elements whom value is 2^k\n"; //bai 166
+    std::cout << "Answer: " << baseTwoInArray(intType) << "\n";
+
+    std::cout << "\nBai 169: Find the biggest even number that is less than all of the odd numbers.\n"; //bai 169
+    std::cout << "Answer: " << biggestEvenLessThanOdd(intType) << "\n";
+
+    std::cout << "\nBai 173: \n"; // bai 173
+    std::cout << "Answer: " << findLeastFrequency(intType) << "\n";
+
+    std::cout << "\nBai 174: List all pairs in the array where a < b\n"; //bai 174
+    listAllPairs(floatType);
+
+    std::cout << "\n\nBai 175: Find two elements most closest in value.\n";
+    listPairClosest(floatType);
+
+    std::cout << "\nBai 180: list all numbers n in the array where: n < abs(-1); n > abs(+1)\n";
+    bai180(floatType);
+    std::cout << "\n\nBai 182: List all numbers that has at least one element next to it where the sign is different.\n";
+    listDiffSign(floatType);
+
+    std::cout << "\nBai 190: List all elements in the array where each of its digits are odd numbers.\n";
+    listOddDigit(intType);
+
+    std::cout << "\n\nBai 192: List all elements in the array where the first digit is an even number.\n";
+    firstElementEven(intType);
+
+    std::cout << "\n\nBai 195: List all 3 values in an array where a = b + c and a, b, c are distinct.\n";
+    bai195(floatType);
+
+    std::cout << "\n\nBai 202: Sum all numbers where their first digit is odd.\n";
+    std::cout << "Answer: " << sumFirstDigitOdd(intType) << "\n";
+
+    std::cout << "\nBai 207: Sum of all the extreme elements.\n";
+    std::cout << "Answer: " << sumExtremeElement(floatType) << "\n";
+
+    std::cout << "\nBai 215: Find average distance between all elements in the array.\n";
+    std::cout << "Answer: " << findAvgDistanceBetweenElements(floatType);
+
+    std::cout << "\nBai 221: Count the numbers of odd and even. [-1 even > odd; 0 odd == even; odd > even]\n";
+    std::cout << "Answer: " << compareCountOddEven(intType) << "\n";
+
+    std::cout << "\nBai 226: Count numbers of elements in which the one next to it is also even.\n";
+    std::cout << "Answer: " << countNextToEven(intType) << "\n";
+
+    std::cout << "\nBai 230: Count distinct elements and it's occurrences.";
+    countDistinctElement(floatType);
+
+    std::cout << "\nBai 231: List all unique elements in the array.\n";
+    listDistinctElements(floatType);
 
     return 0;
 }
