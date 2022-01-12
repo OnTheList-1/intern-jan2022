@@ -188,8 +188,18 @@ int closestMinX(const std::vector<float>& array) //bai 156
 void printRange(const std::vector<float>& array)
 {
     std::vector<float> copy(array.begin(), array.end());
-    sortArr(copy);
-    std::cout << "Min: " << copy[0] << "; Max = " << copy[copy.size() - 1] << "\n";
+    int max = copy[0];
+    int min = copy[0];
+
+    for (int i = 1; i < copy.size(); ++i)
+    {
+        if (max < copy[i])
+            max = copy[i];
+        if (min > copy[i])
+            min = copy[i];
+    }
+
+    std::cout << "Min: " << min << "; Max = " << max << "\n";
 }
 
 int productNearby(const std::vector<int>& array)
@@ -523,85 +533,4 @@ void listDistinctElements(const std::vector<float>& array)
             std::cout << itr->first << " ";
 
     }
-}
-
-int countAinB(const std::vector<float>& array1, const std::vector<float>& array2)
-{
-    std::map<float, int> m;
-    for (int i = 0; i < array1.size(); ++i)
-        m[array1[i]]++;
-
-    for (int i = 0; i < array2.size(); ++i)
-        m[array2[i]]++;
-
-    int countMin = -1;
-
-    for (const auto& itr : m)
-    {
-        if (countMin < 0)
-            countMin = itr.second;
-
-        countMin = std::min(countMin, itr.second);
-    }
-
-    return (countMin > 1) ? --countMin : 0;
-}
-
-void listModeInArray(const std::vector<int>& array)
-{
-    int occurrence = 0;
-    std::map<int, int> m;
-
-    for (int i = 0; i < array.size(); ++i)
-        m[array[i]]++;
-
-    for (const auto& itr : m)
-    {
-        occurrence = std::max(occurrence, itr.second);
-    }
-
-    for (const auto& itr1 : m)
-    {
-        if (itr1.second == occurrence)
-            std::cout << itr1.first << " ";
-    }
-}
-
-bool isConsecutiveZeros(const std::vector<int>& array)
-{
-    for (int i = 0; i < array.size() - 1; ++i)
-    {
-        if (array[i] == 0 && array[i + 1] == 0)
-            return true;
-    }
-
-    return false;
-}
-
-bool isSymetricalArray(const std::vector<float>& array)
-{
-    for (int i = 0; i < array.size() / 2; ++i)
-    {
-        if (array[i] != array[array.size() - i - 1])
-            return false;
-    }
-    return true;
-
-}
-
-bool isDescendingArray(const std::vector<float>& array)
-{
-    for (int i = 1; i < array.size(); ++i)
-    {
-        if (array[i] > array[i - 1])
-            return false;
-    }
-
-    return true;
-}
-
-void sortArrayDescending(std::vector<float>& array)
-{
-    sort(array.begin(), array.end(), std::greater <>());
-    printVector(array);
 }

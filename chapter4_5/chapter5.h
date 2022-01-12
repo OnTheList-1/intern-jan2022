@@ -60,9 +60,3 @@ int compareCountOddEven(const std::vector<int>&); //bai 221
 int countNextToEven(const std::vector<int>&); // bai 226
 void countDistinctElement(const std::vector<float>&); //bai 230
 void listDistinctElements(const std::vector<float>&); //bai 231
-int countAinB(const std::vector<float>&, const std::vector<float>&); //bai 236
-void listModeInArray(const std::vector<int>&); //bai 238
-bool isConsecutiveZeros(const std::vector<int>&); //bai 241
-bool isSymetricalArray(const std::vector<float>&); //bai 246
-bool isDescendingArray(const std::vector<float>&); //bai 249
-void sortArrayDescending(std::vector<float>&); //bai 256

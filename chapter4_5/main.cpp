@@ -99,26 +99,5 @@ int main() {
     std::cout << "\nBai 231: List all unique elements in the array.\n";
     listDistinctElements(floatType);
 
-    std::cout << "\nBai 236: Count the number of times A appears in B.\n";
-    std::vector<float> floatTypeExample{ 10, 12, 12.2, 13, 15 };
-    std::cout << "Answer: " << countAinB(floatType, floatTypeExample) << std::endl;
-
-    std::cout << "\nBai 238: List the mode in the array.\n";
-    listModeInArray(intType);
-
-    std::cout << "\n\nBai 241: Consecutive Zeros\n";
-    std::cout << "Answer: " << isConsecutiveZeros(intType) << "\n";
-
-    std::cout << "\nBai 246: Symetrical Array\n";
-    std::cout << "Answer : " << isSymetricalArray(floatType) << "\n";
-
-    std::cout << "\nBai 249: Descending Array\n";
-    std::cout << "Answer: " << isDescendingArray(floatType) << "\n";
-
-    std::cout << "\nBai 256: Sort Array Descending\n";
-    std::vector<float> copy256(floatType.begin(), floatType.end());
-    sortArrayDescending(copy256);
-
-
     return 0;
 }
