@@ -188,8 +188,8 @@ int closestMinX(const std::vector<float>& array) //bai 156
 void printRange(const std::vector<float>& array)
 {
     std::vector<float> copy(array.begin(), array.end());
-    int max = copy[0];
-    int min = copy[0];
+    float max = copy[0];
+    float min = copy[0];
 
     for (int i = 1; i < copy.size(); ++i)
     {
