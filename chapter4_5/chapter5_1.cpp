@@ -6,6 +6,7 @@
 #include <map>
 #include <iostream>
 #include <unordered_set>
+#include <unordered_map>
 
 
 #include "chapter5_1.h"
@@ -484,25 +485,8 @@ void listSubsetAscending(int* array, const int& size)
                 ascendingArray[temp] = array[k];
                 ++temp;
             }
-            if (isAscending(ascendingArray, temp) == false && temp > 1)
+            if (temp > 1 && isAscending(ascendingArray, temp) == true)
                 printArray(ascendingArray, temp);
-        }
-    }
-}
-
-void subsetSumM(int* array, const int& size, int* subset, const int& subsetSize, const int& total, const int& nodeCount, const int& sum)
-{
-    if (total == sum)
-    {
-        printArray(subset, subsetSize);
-        return;
-    }
-    else
-    {
-        for (int i = nodeCount; i < size; ++i)
-        {
-            subset[subsetSize] = array[size]; //initialize position
-            subsetSumM(array, size, subset, subsetSize + 1, total + array[i], i + 1, sum);
         }
     }
 }
