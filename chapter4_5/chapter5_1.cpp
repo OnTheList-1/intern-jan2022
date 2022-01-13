@@ -5,6 +5,8 @@
 #include <array>
 #include <map>
 #include <iostream>
+#include <unordered_set>
+
 
 #include "chapter5_1.h"
 #include "chapter5.h"
@@ -34,7 +36,7 @@ bool isOdd(const std::string& fString)
 }
 
 template <typename T>
-void printArray(T* array, int size)
+void printArray(T* array, const int& size)
 {
     for (int i = 0; i < size; ++i)
     {
@@ -61,50 +63,49 @@ void swap(T& a, T& b)
 float roundFloat(float& a)
 {
     int integer = (int)a;
-    float getDecimal = a - (float)integer;
-    if (getDecimal < 0.5) {
-        return std::floor(getDecimal + integer);
+    float decimal = a - (float)integer;
+    if (decimal < 0.5) {
+        return std::floor(a);
     }
 
-    return std::ceil(getDecimal + integer);
+    return std::ceil(a);
 }
 
 template <typename T>
-bool checkAscending(T* array, const int& size)
+bool isAscending(T* array, const int& size)
 {
     for (int i = 0; i < size - 1; ++i)
     {
         if (array[i] > array[i + 1])
-            return true;
+            return false;
     }
-    return false;
+    return true;
 }
 
-int countAinB(const std::vector<float>& array1, const std::vector<float>& array2)
+int countAinB(const std::vector<float>& array1, const std::vector<float>& array2) // needs fix
 {
-    if (array1.size() > array2.size())
-        return 0;
-
-    std::map<float, int> m;
-    int countMin = -1;
-
+    int count = 0;
     for (int i = 0; i < array2.size(); ++i)
     {
-        for (int j = 0; j < array1.size(); ++j)
+        if (array1[0] == array2[i] && array2.size() - i >= array1.size())
         {
-            if (array1[j] == array2[i])
-                m[array1[j]]++;
+            int start = i;
+            bool flag = true;
+            for (int j = 0; j < array1.size(); ++j)
+            {
+                if (array1[j] != array2[start])
+                {
+                    flag = false;
+                    break;
+                }
+                ++start;
+            }
+            if (flag == true)
+                ++count;
+
         }
     }
-
-    for (const auto& itr : m)
-    {
-        if (countMin < 0)
-            countMin = itr.second;
-        countMin = std::min(countMin, itr.second);
-    }
-
-    return countMin;
+    return count;
 }
 
 void listModeInArray(const std::vector<int>& array)
@@ -172,11 +173,11 @@ void sortArrayOddAscending(std::vector<float>& array)
 
     for (int i = 0; i < array.size(); ++i)
     {
-        if (isOdd(std::to_string(array[i])) == true)
+        if (i % 2 == 1)
         {
-            for (int j = i + 1; j < array.size(); ++j)
+            for (int j = i + 2; j < array.size(); ++j)
             {
-                if (array[i] > array[j] && isOdd(std::to_string(array[j])) == true)
+                if (array[i] > array[j])
                 {
                     float temp = array[i];
                     array[i] = array[j];
@@ -277,28 +278,42 @@ void sortWhileInsert(float* array, const int& size)
 
 void deleteAllK(float* array, int& size, const float& k)
 {
-    for (int i = 0; i < size; ++i)
+
+    int i = 0;
+    while (i < size)
     {
+
         if (array[i] == k)
         {
             for (int j = i; j < size - 1; ++j)
-                array[j] = array[j + 1]; //shift left
+                array[j] = array[j + 1]; //shift down
+
             --size;
+
         }
+        else
+        {
+            ++i;
+        }
+
     }
 
     printArray(array, size);
 }
 
-void deleteEvenNumbers(int* array, int& size)
+void deleteEvenNumbers(int* array, int& size) //needs fix
 {
-    for (int i = 0; i < size; ++i)
+    int i = 0;
+    while (i < size)
     {
         if (array[i] % 2 == 0)
         {
             for (int j = i; j < size - 1; ++j)
                 array[j] = array[j + 1];
             --size;
+        }
+        else {
+            ++i;
         }
     }
 
@@ -307,34 +322,55 @@ void deleteEvenNumbers(int* array, int& size)
 
 void deleteDuplicates(int* array, int& size)
 {
-    std::map<int, int> m;
-    for (int i = 0; i < size; ++i) // unique elements in map
-        m[array[i]]++;
+    std::unordered_set<int> s;
+    for (int i = 0; i < size; ++i) // unique elements in set
+        s.insert(array[i]);
 
     int index = 0;
-    for (const auto& itr : m) {
-        array[index] = itr.first;
+    for (const auto& itr : s) {
+        array[index] = itr;
         ++index;
     }
 
-    size = (int)m.size();
+    size = (int)s.size();
 
     printArray(array, size);
 };
 
-void sortBai281(int* array, const int& size)
+void sortBai281(int* array, const int& size) // needs fix
 {
-    for (int i = 0; i < size / 2; ++i)
+    int lastPositiveIndex = 0;
+    for (int i = 0; i < size; ++i) // move even number to start of the array
     {
-        for (int j = (size - 1) / 2; j >= 0; --j)
+        if (array[i] % 2 == 0 && array[i] != 0)
         {
-            if (array[j] % 2 == 0 && array[i] % 2 == 1 && array[j] != 0)
-                swap(array[i], array[j]);
+            int temp = array[i];
+            for (int j = i; j > 0; --j)
+                array[j] = array[j - 1];
 
+            array[0] = temp;
         }
     }
 
-    //deal with zero
+    for (int i = 0; i < size; ++i) //find last positive index
+    {
+        if (array[i] % 2 != 0)
+        {
+            lastPositiveIndex = i;
+            break;
+        }
+    }
+
+    for (int i = 0; i < size; i++) //move 0 to last positive number's index
+    {
+        if (array[i] == 0)
+        {
+            for (int j = i; j > lastPositiveIndex; --j)
+                array[j] = array[j - 1];
+
+            array[lastPositiveIndex] = 0;
+        }
+    }
 
     printArray(array, size);
 }
@@ -363,7 +399,7 @@ void reverseEvenPosition(int* array, const int& size)
 void rotateArray(int* array, const int& size)
 {
     int first = array[0];
-    for (int i = 0; i < size; ++i)
+    for (int i = 0; i < size - 1; ++i)
     {
         array[i] = array[i + 1];
     }
@@ -380,7 +416,7 @@ void rotateArrayKTimes(int* array, const int& size, const int& k)
         position.push_back(array[i]); //fix
     }
 
-    for (int i = 0; i < size; ++i)
+    for (int i = 0; i < size - k; ++i)
     {
         array[i] = array[i + k];
     }
@@ -448,8 +484,25 @@ void listSubsetAscending(int* array, const int& size)
                 ascendingArray[temp] = array[k];
                 ++temp;
             }
-            if (checkAscending(ascendingArray, temp) == false && temp > 1)
+            if (isAscending(ascendingArray, temp) == false && temp > 1)
                 printArray(ascendingArray, temp);
+        }
+    }
+}
+
+void subsetSumM(int* array, const int& size, int* subset, const int& subsetSize, const int& total, const int& nodeCount, const int& sum)
+{
+    if (total == sum)
+    {
+        printArray(subset, subsetSize);
+        return;
+    }
+    else
+    {
+        for (int i = nodeCount; i < size; ++i)
+        {
+            subset[subsetSize] = array[size]; //initialize position
+            subsetSumM(array, size, subset, subsetSize + 1, total + array[i], i + 1, sum);
         }
     }
 }
