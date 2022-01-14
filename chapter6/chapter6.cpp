@@ -1,0 +1,276 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <map>
+
+#include "chapter6.h"
+
+//  HELPER  //
+bool isPrime(const int& a)
+{
+    if (a == 2)
+        return true;
+
+    if (a == 0)
+        return false;
+
+    if (abs(a) == 1)
+        return false;
+
+    for (int i = 2; i < a; i++)
+    {
+        if (a % i == 0)
+            return false;
+    }
+    return true;
+}
+
+template <typename T>
+void displayMatrix(std::vector<std::vector<T>> matrix)
+{
+    std::cout << "\n";
+
+    for (const auto& itr : matrix)
+    {
+        for (const auto& itr1 : itr) {
+
+            std::cout << itr1 << "\t";
+        }
+
+        std::cout << "\n";
+    }
+}
+
+template <typename T>
+void printVector(std::vector<T> v)
+{
+    for (int i = 0; i < v.size(); ++i)
+    {
+        std::cout << v[i] << " ";
+    }
+
+    std::cout << "\n";
+}
+
+
+//  Implementation  //
+
+float findLargestValueMatrix(const std::vector<std::vector<float>>& matrix)
+{
+    float max = 0;
+    for (const auto& itr : matrix)
+    {
+        for (const auto& itr1 : itr)
+        {
+            max = std::max(max, itr1);
+        }
+    }
+    return max;
+}
+
+bool isBai316(const std::vector<std::vector<int>>& matrix)
+{
+    for (const auto& itr : matrix)
+    {
+        for (const auto& itr1 : itr)
+        {
+            if (itr1 < 2004 && itr1 % 2 == 0)
+                return true;
+        }
+    }
+    return false;
+}
+
+int countPrimeInMatrix(const std::vector<std::vector<int>>& matrix)
+{
+    int count = 0;
+    for (const auto& itr : matrix)
+    {
+        for (const auto& itr1 : itr)
+        {
+            if (isPrime(itr1))
+                ++count;
+        }
+
+    }
+    return count;
+
+}
+
+void sortMatrix(std::vector<std::vector<float>>& matrix)
+{
+    for (auto& itr : matrix)
+        sort(itr.begin(), itr.end());
+
+
+    displayMatrix(matrix);
+}
+
+float sumPositiveinMatrix(const std::vector<std::vector<float>>& matrix)
+{
+    float sum = 0;
+    for (int i = 0; i < matrix.size(); ++i)
+    {
+        for (int j = 0; j < matrix[i].size(); ++j)
+        {
+            if (matrix[i][j] > 0)
+                sum += matrix[i][j];
+        }
+    }
+    return sum;
+}
+
+void sumRowinMatrix(const std::vector<std::vector<float>>& matrix)
+{
+    for (int i = 0; i < matrix.size(); ++i)
+    {
+        float sum = 0;
+        for (int j = 0; j < matrix[i].size(); ++j)
+            sum += matrix[i][j];
+
+        std::cout << "Row " << i << ": " << sum << "\n";
+    }
+}
+
+void calculateProductofColumn(const std::vector<std::vector<float>>& matrix)
+{
+
+    for (int i = 0; i < matrix[0].size(); ++i)
+    {
+        float sum = 0;
+        for (int j = 0; j < matrix.size(); ++j)
+        {
+            if (matrix[j][i] > 0)
+                sum *= matrix[j][i];
+        }
+        std::cout << "Column " << i << ": " << sum << "\n";
+    }
+}
+
+void sumOddNumberinColumn(const std::vector<std::vector<int>>& matrix)
+{
+
+    for (int i = 0; i < matrix[0].size(); ++i)
+    {
+        int sum = 0;
+        for (int j = 0; j < matrix.size(); ++j)
+        {
+            if (matrix[j][i] % 2 == 1)
+                sum += matrix[j][i];
+        }
+        std::cout << "Column " << i << ": " << sum << "\n";
+    }
+
+
+}
+
+int countXinMatrix(const std::vector<std::vector<float>>& matrix, const int& x)
+{
+    int count = 0;
+    for (const auto& itr : matrix)
+    {
+        for (const auto& itr1 : itr)
+        {
+            if (itr1 == x)
+                ++count;
+        }
+    }
+    return count;
+}
+
+int countExtremeValueinMatrix(const std::vector<std::vector<float>>& matrix)
+{
+    int count = 0;
+    int row = (int)matrix.size();
+    int column = (int)matrix[0].size();
+
+    for (int i = 0; i < matrix.size(); ++i)         //row
+    {
+        for (int j = 0; j < matrix[0].size(); ++j)  //column
+        {
+            for (int ii = -1; i <= 1; ++i) {         //check nearby
+                for (int jj = -1; j <= 1; ++j)
+                {
+                    if (!(row + ii >= 0 && column + jj >= 0 && i + ii < matrix.size() && j + jj < matrix[0].size() && !(ii == 0 || jj == 0))) // an extreme value
+                        ++count;
+                }
+            }
+        }
+    }
+
+    return count;
+}
+
+void printRowEven(const std::vector<std::vector<int>>& matrix)
+{
+    for (int i = 0; i < matrix.size(); ++i)
+    {
+        for (int j = 0; j < matrix[i].size(); ++j)
+        {
+            if (matrix[i][j] % 2 == 0)
+            {
+                printVector(matrix[i]);
+                break;
+            }
+        }
+    }
+}
+
+void printBai361(const std::vector<std::vector<float>>& matrix)
+{
+    for (int i = 0; i < matrix.size(); ++i)
+    {
+        bool checkZero = false;
+        bool checkPositive = false;
+        bool checkNegative = false;
+
+        for (int j = 0; j < matrix[i].size(); ++j)
+        {
+            if (matrix[i][j] == 0)
+                checkZero = true;
+            if (matrix[i][j] > 0)
+                checkPositive = true;
+            if (matrix[i][j] < 0)
+                checkNegative = true;
+        }
+        if (checkZero == true && checkPositive == true && checkNegative == true)
+            printVector(matrix[i]);
+
+    }
+}
+
+float findModeMatrix(const std::vector<std::vector<float>>& matrix)
+{
+    std::map<float, int> m;
+
+    for (int i = 0; i < matrix.size(); ++i)
+    {
+        for (int j = 0; j < matrix[i].size(); ++j)
+            m[matrix[i][j]]++;
+
+    }
+
+    const auto& itr = m.rbegin();
+    return itr->second;
+}
+
+int findMostAppearDigit(const std::vector<std::vector<int>>& matrix)
+{
+    std::map<int, int> m;
+
+    for (int i = 0; i < matrix.size(); ++i)
+    {
+        for (int j = 0; j < matrix[i].size(); ++j)
+        {
+            int copy = matrix[i][j];
+            while (copy > 0)
+            {
+                m[copy % 10]++;
+                copy /= 10;
+            }
+        }
+    }
+
+    const auto& itr = m.rbegin();
+    return itr->second;
+}
