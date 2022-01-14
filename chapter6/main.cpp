@@ -136,7 +136,7 @@ int countSaddleValue(std::vector<std::vector<T>>& matrix)
             for (int columnTraverse = 0; columnTraverse < matrix[0].size(); ++columnTraverse)
             {
                 if (matrix[i][columnTraverse] < matrix[i][j])
-                    checkColumn == false;
+                    checkColumn = false;
             }
             if (checkColumn == true && checkRow == true)
                 ++count;
@@ -192,12 +192,13 @@ T findLargestNegativeinMatrix(std::vector<std::vector<T>>& matrix)
                 negative = std::min(negative, matrix[i][j]);
         }
     }
+    return negative;
 }
 
 template <typename T>
 void largestValueRowMatrix(std::vector<std::vector<T>>& matrix)
 {
-    vector<int> index;
+    std::vector<T> index;
     int sum = 0;
     int max = 0;
 
@@ -291,6 +292,8 @@ int main()
 
     std::cout << "\nBai 384: Find digit that show up the most in the matrix\n";
     std::cout << findMostAppearDigit(intMatrix);
+
+
 
 }
 
