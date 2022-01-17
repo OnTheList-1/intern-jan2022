@@ -21,3 +21,5 @@ void printRowEven(const std::vector<std::vector<int>>&); //bai 358
 void printBai361(const std::vector<std::vector<float>>&); //bai 361
 float findModeMatrix(const std::vector<std::vector<float>>&); //bai 381
 int findMostAppearDigit(const std::vector<std::vector<int>>&); //bai 384
+void listColumnWithMostDigit(const std::vector<std::vector<int>>&); //bai 390
+void buildBFromA428(std::vector<std::vector<int>>); //bai 428
