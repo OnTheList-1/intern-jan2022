@@ -214,7 +214,7 @@ T findLargestNegativeinMatrix(std::vector<std::vector<T>>& matrix)
         for (int j = 0; j < matrix[i].size(); ++j)
         {
             if (matrix[i][j] < 0)
-                negative = std::min(negative, matrix[i][j]);
+                negative = std::max(negative, matrix[i][j]);
         }
     }
     return negative;
