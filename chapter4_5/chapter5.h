@@ -24,6 +24,8 @@ void printVector(std::vector<T>& a)
     else
         for (auto i : a)
             std::cout << i << " ";
+
+    std::cout << "\n";
 };
 
 /*              Helper              */
