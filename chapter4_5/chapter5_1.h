@@ -29,6 +29,7 @@ void printBai289(const int*, const int&); //bai 289
 void arrayToInt(float*, const int&); //bai 292
 void listArraySubset(int* array, const int& size); //bai 293
 void listSubsetAscending(int* array, const int& size); //bai 295
-
-
+void subsetSumM(int*, const int&, const int&); //bai 304
+void positiveSubsetLargestSum(int*, const int&); // bai 305
+void createArrayBai309(float*, const int&); //bai 309
 

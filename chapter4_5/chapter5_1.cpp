@@ -490,3 +490,98 @@ void listSubsetAscending(int* array, const int& size)
         }
     }
 }
+
+void subsetSumM(int* array, const int& size, const int& sum)
+{
+    std::vector<int> subset;
+    bool flag = false;
+    for (int i = 0; i < size; ++i)
+    {
+        if (flag == true) {
+            printVector(subset);
+            break;
+        }
+        int cSum = array[i];
+
+        if (cSum < sum) {
+            subset.push_back(array[i]);
+            for (int j = i + 1; j < size; ++j)
+            {
+                if (cSum == sum) {
+                    flag = true;
+                    break;
+                }
+                if (cSum < sum) {
+                    cSum += array[j];
+                    subset.push_back(array[j]);
+                }
+                if (cSum > sum)
+                    subset.clear();
+            }
+        }
+        if (cSum == sum && subset.empty()) {
+            subset.push_back(sum);
+            printVector(subset);
+        }
+    }
+}
+
+void positiveSubsetLargestSum(int* array, const int& size)
+{
+    std::vector<int> subset;
+    std::map<int, std::vector<int>> u_map;
+
+    int indexV = 0;
+
+    for (int i = 0; i < size; ++i)
+    {
+        if (array[i] >= 0)
+        {
+            subset.push_back(array[i]);
+            int cSum = array[i];
+
+            for (int j = i + 1; j < size; ++j)
+            {
+                if (array[j] < 0) {
+                    //u_map.emplace(std::make_pair(cSum, subset));
+                    //subset.clear();
+                    break;
+                }
+
+                if (array[j] >= 0 && subset.size() <= size)
+                {
+                    cSum += array[j];
+                    subset.push_back(array[j]);
+
+                }
+            }
+            u_map.emplace(std::make_pair(cSum, subset));
+            subset.clear();
+        }
+        else
+            subset.clear();
+    }
+
+    auto lastIndex = u_map.rbegin();
+
+    printVector((*lastIndex).second);
+}
+
+void createArrayBai309(float* array, const int& size)
+{
+    float* result = new float[size];
+
+    for (int i = 1; i < size - 1; ++i)
+    {
+        if (i == 1)
+            result[0] = array[0] + array[1];
+
+        result[i] = array[i - 1] + array[i + 1];
+    }
+
+    result[size - 1] = array[size - 1] + array[size - 2];
+
+    printArray(result, size);
+
+
+}
