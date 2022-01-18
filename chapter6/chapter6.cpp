@@ -181,20 +181,59 @@ int countXinMatrix(const std::vector<std::vector<float>>& matrix, const int& x)
 int countExtremeValueinMatrix(const std::vector<std::vector<float>>& matrix)
 {
     int count = 0;
-    int row = (int)matrix.size();
-    int column = (int)matrix[0].size();
 
-    for (int i = 0; i < matrix.size(); ++i)         //row
+    for (int i = 0; i < matrix.size(); ++i)
     {
-        for (int j = 0; j < matrix[0].size(); ++j)  //column
+        for (int j = 0; j < matrix[0].size(); ++j)
         {
-            for (int ii = -1; i <= 1; ++i) {         //check nearby
-                for (int jj = -1; j <= 1; ++j)
-                {
-                    if (!(row + ii >= 0 && column + jj >= 0 && i + ii < matrix.size() && j + jj < matrix[0].size() && !(ii == 0 || jj == 0))) // an extreme value
-                        ++count;
-                }
+            if (i - 1 >= 0) // down
+            {
+                if (matrix[i][j] <= matrix[i - 1][j])
+                    continue;
             }
+
+            if (i + 1 < matrix.size()) //up
+            {
+                if (matrix[i][j] <= matrix[i + 1][j])
+                    continue;
+            }
+
+            if (j - 1 >= 0) //left
+            {
+                if (matrix[i][j] <= matrix[i][j - 1])
+                    continue;
+            }
+
+            if (j + 1 < matrix[0].size()) //right
+            {
+                if (matrix[i][j] <= matrix[i][j + 1])
+                    continue;
+            }
+
+            if (j + 1 < matrix[0].size() && i + 1 < matrix.size()) //bot right
+            {
+                if (matrix[i][j] <= matrix[j + 1][i + 1])
+                    continue;
+            }
+
+            if (j + 1 < matrix[0].size() && i - 1 >= 0) //top right
+            {
+                if (matrix[i][j] <= matrix[i - 1][j + 1])
+                    continue;
+            }
+
+            if (j - 1 >= 0 && i + 1 < matrix.size()) //bot left
+            {
+                if (matrix[i][j] <= matrix[i + 1][j - 1])
+                    continue;
+            }
+
+            if (j - 1 >= 0 && i - 1 >= 0) //top left
+            {
+                if (matrix[i][j] <= matrix[i - 1][j - 1])
+                    continue;
+            }
+            ++count;
         }
     }
 
@@ -251,7 +290,7 @@ float findModeMatrix(const std::vector<std::vector<float>>& matrix)
     }
 
     const auto& itr = m.rbegin();
-    return itr->second;
+    return itr->first;
 }
 
 int findMostAppearDigit(const std::vector<std::vector<int>>& matrix)
@@ -272,5 +311,5 @@ int findMostAppearDigit(const std::vector<std::vector<int>>& matrix)
     }
 
     const auto& itr = m.rbegin();
-    return itr->second;
+    return itr->first;
 }
