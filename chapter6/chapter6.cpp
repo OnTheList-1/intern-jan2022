@@ -311,7 +311,6 @@ int findMostAppearDigit(const std::vector<std::vector<int>>& matrix)
     }
 
     const auto& itr = m.rbegin();
-<<<<<<< HEAD
     return itr->second;
 }
 
@@ -380,7 +379,4 @@ void buildBFromA428(std::vector<std::vector<int>> matrix)
     }
     displayMatrix(B);
 
-=======
-    return itr->first;
->>>>>>> main
 }
