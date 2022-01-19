@@ -280,7 +280,7 @@ void printBai361(const std::vector<std::vector<float>>& matrix)
 
 float findModeMatrix(const std::vector<std::vector<float>>& matrix)
 {
-    std::map<float, int> m;
+    std::map<float, float> m;
 
     for (int i = 0; i < matrix.size(); ++i)
     {
@@ -311,5 +311,72 @@ int findMostAppearDigit(const std::vector<std::vector<int>>& matrix)
     }
 
     const auto& itr = m.rbegin();
-    return itr->first;
+    return itr->second;
+}
+
+void listColumnWithMostDigit(const std::vector<std::vector<int>>& matrix)
+{
+    std::map<std::vector<int>, int> m;
+    int max = 0;
+
+    for (int i = 0; i < matrix[0].size(); ++i)
+    {
+        for (int j = 0; j < matrix.size(); ++j)
+        {
+            int temp = matrix[j][i];
+            do
+            {
+                m[matrix[j]]++; //m[matrix[i]]++
+                temp /= 10;
+            } while (temp > 0);
+        }
+    }
+
+
+    for (const auto& itr : m) //get max   
+        max = std::max(max, (int)itr.second);
+
+    for (const auto& itr1 : m) //check second against max then print it out
+    {
+        if (itr1.second == max)
+            printVector(itr1.first);
+    }
+}
+
+void buildBFromA428(std::vector<std::vector<int>> matrix)
+{
+
+    std::vector<std::vector<int>> B(matrix.size());
+
+    for (int i = 0; i < matrix.size(); ++i)
+    {
+        for (int j = 0; j < matrix[0].size(); ++j)
+        {
+            int count = 0;
+
+            if (i - 1 >= 0 && matrix[i - 1][j] > 0) //check above
+                ++count;
+            if (i + 1 <= matrix.size() - 1 && matrix[i + 1][j] > 0) //check below
+                ++count;
+            if (j + 1 <= matrix[0].size() - 1 && matrix[i][j + 1] > 0) //check right
+                ++count;
+            if (j - 1 >= 0 && matrix[i][j - 1] > 0) //check left
+                ++count;
+
+            if (i - 1 >= 0 && j - 1 >= 0 && matrix[i - 1][j - 1] > 0) //check bot left diag
+                ++count;
+            if (i + 1 <= matrix.size() - 1 && j + 1 <= matrix[0].size() - 1 && matrix[i + 1][j + 1] > 0) //check top right diag
+                ++count;
+            if (i + 1 <= matrix.size() - 1 && j - 1 >= 0 && matrix[i + 1][j - 1] > 0) //check bot right diag
+                ++count;
+            if (i - 1 >= 0 && j + 1 <= matrix[0].size() - 1 && matrix[i - 1][j + 1] > 0) //check top left diag
+                ++count;
+
+
+            B[i].push_back(count);
+
+        }
+    }
+    displayMatrix(B);
+
 }
