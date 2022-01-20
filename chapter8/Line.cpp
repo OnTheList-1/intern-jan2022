@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <math.h>
 
 #include "Line.h"
 
@@ -35,6 +37,38 @@ bool Line::isOverlap(const Line& Line)
     if (a == Line.a && b == Line.b)
         return true;
     return false;
+}
+
+bool Line::isIntersect(const Line& Line2, const Line& Line3)
+{
+    if (a - Line2.a == 0 && a - Line3.a == 0) //check gradient
+        return false;
+    return true;
+}
+
+bool Line::isAPointInLine(const float& a1, const float& b1)
+{
+    if (b1 == (a * a1) + b)
+        return true;
+    return false;
+}
+
+Line Line::findClosestToP(std::vector<Line> vec, const float& a1, const float& b1)
+{
+    float firstElement = (std::abs(vec[0].a * a1 + (-1 * b1) + vec[0].b)) / (float)std::sqrt(std::pow(3, 2) + std::pow(-vec[0].b, 2));
+
+    std::pair<Line, float> p{ vec[0], firstElement };
+
+    for (int i = 0; i < vec.size(); ++i)
+    {
+        if (p.second > (std::abs(vec[i].a * a1 + (-1 * b1) + vec[i].b)) / std::sqrt(std::pow(3, 2) + std::pow(-vec[i].b, 2)))
+        {
+            p.first = vec[i];
+            p.second = std::abs(vec[i].a * a1 + (-1 * b1) + vec[i].b) / (float)std::sqrt(std::pow(3, 2) + std::pow(-vec[i].b, 2));
+        }
+    }
+
+    return p.first;
 }
 
 

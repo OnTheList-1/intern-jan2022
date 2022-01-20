@@ -142,6 +142,37 @@ int main()
             break;
     }
 
+    std::cout << "\n4. Check if there any 3 lines that intersect at a single point.\n";
+    bool checkIntersect = false;
+    for (int i = 0; i < size; ++i)
+    {
+        for (int j = i + 1; j < size; ++j)
+        {
+            for (int k = j + 1; k < size; ++k)
+            {
+                if (lineVector[i].isIntersect(lineVector[j], lineVector[k]))
+                {
+                    std::cout << "There exist 3 lines that intersect at a single point.\n";
+                    checkIntersect == true;
+                    break;
+                }
+            }
+            if (checkIntersect == true)
+                break;
+        }
+        if (checkIntersect == true)
+            break;
+
+    }
+
+    std::cout << "\n5. Check if any line crosses point P.\n";
+    for (int i = 0; i < size; ++i)
+    {
+        if (lineVector[i].isAPointInLine(1, 2))
+            std::cout << "Line " << i << " crosses Point P";
+    }
+
+    std::cout << "\n6. Find the shortest distance from an array of Lines to Point P\n";
 
 
     return 0;
