@@ -36,8 +36,10 @@ public:
     //setters & getters
     Node* getRoot() const;
 
+
     //helper
     void destroy_recursive(Node*);
+
 
     //insert and print
     //inorder/postorder/preorder traversal
@@ -51,11 +53,22 @@ public:
     void printEvenNumber(Node*);
     void printKDistantFromRoot(Node*, const int&);
     void printEveryKLevel(Node*);
-    void deleteNode(Node*, const int&); //needs check
+    void deleteNode(Node*, const int&);
+
+
+    //search
+    BinaryTree* searchBST(const int&);
+
 
     //bool
     bool isEmpty();
     bool isPerfect(Node*); //needs check
+    bool hasPathSum(Node*, const int&);
+    bool isSame(Node*, Node*);
+    bool isSubtree(Node*, Node*);
+    bool helper(Node*, const int&);
+    bool isUniValuedTree(Node*);
+
 
     //misc
     int getMax(Node*);
@@ -65,6 +78,7 @@ public:
     int sumNodes(Node*);
     int sumLeaf(Node*);
     int biggestNodeValueDifference(Node*);
+    int minDepth(Node*);
 
 private:
     Node* root;
@@ -256,6 +270,24 @@ void BinaryTree::deleteNode(Node* node, const int& value)
     }
 }
 
+BinaryTree* BinaryTree::searchBST(const int& val)
+{
+    if (root == nullptr)
+        return this;
+
+    if (root->data == val)
+        return this;
+
+    BinaryTree* traverse = new BinaryTree;
+    traverse->searchBST(val);
+
+    if (traverse == nullptr)
+        traverse == traverse->searchBST(val);
+
+    return traverse;
+
+}
+
 bool BinaryTree::isEmpty()
 {
     if (root == nullptr)
@@ -345,13 +377,71 @@ bool BinaryTree::isPerfect(Node* node)
 
     if (node->left == nullptr && root->right == nullptr)
         return true;
-    else
-        return false;
 
     return isPerfect(node->left) && isPerfect(node->right);
+}
+
+bool BinaryTree::hasPathSum(Node* node, const int& targetSum)
+{
+    if (!node)
+        return false;
+
+    int remain = targetSum - root->data;
+
+    if (!node->left && !root->right)
+        if (remain == 0)
+            return true;
+
+    return hasPathSum(node->left, remain) || hasPathSum(node->right, remain);
+
+}
+
+bool BinaryTree::isSame(Node* root1, Node* root2)
+{
+    if (root1 == nullptr && root2 == nullptr)
+        return true;
+    if (root1 == nullptr || root2 == nullptr)
+        return false;
+
+    return root1->data == root2->data && isSame(root1->left, root2->left) && isSame(root1->right, root2->right);
+}
+
+bool BinaryTree::isSubtree(Node* node, Node* subTree)
+{
+    if (node == nullptr)
+        return false;
+
+    return isSame(node, root) || isSubtree(root->left, subTree) || isSubtree(root->right, subTree);
+}
+
+bool BinaryTree::helper(Node* node, const int& val)
+{
+    if (node == nullptr)
+        return true;
+
+    return (node->data == val) && isUniValuedTree(root->left) && isUniValuedTree(root->right);
+}
+
+bool BinaryTree::isUniValuedTree(Node* node)
+{
+    if (node == nullptr)
+        return true;
+
+    return helper(node, node->data);
 }
 
 int BinaryTree::biggestNodeValueDifference(Node* node)
 {
     return getMax(node) - getMin(node);
+}
+
+int BinaryTree::minDepth(Node* node)
+{
+    if (node == nullptr)
+        return 0;
+
+    if (node->left && node->right)
+        return std::min(minDepth(node->left), minDepth(node->right)) + 1;
+
+    return minDepth(root->left) + minDepth(root->right) + 1;
 }
