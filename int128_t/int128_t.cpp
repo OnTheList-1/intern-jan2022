@@ -88,10 +88,18 @@ std::string infixToPostfix(std::string infix)
 
 int128_t::int128_t()
 {
-	for (int i = 0; i < BYTE_SIZE; ++i)
-	{
-		bin[i] = 0;
-	}
+	memset(bin, 0, BYTE_SIZE);
+}
+
+int128_t::int128_t(const std::string& in)
+{
+	memset(bin, 0, BYTE_SIZE);
+	StringToBinary(in);
+}
+
+int128_t::int128_t(const int128_t& rhs)
+{
+	memcpy_s(bin, BYTE_SIZE, rhs.bin, BYTE_SIZE);
 }
 
 // Read and Write
@@ -104,17 +112,17 @@ void int128_t::ReadConsoleString()
 	std::cout << "Enter your number: ";
 	std::cin >> userInput;
 
-	std::cout << "String Representation: " << StringToBinary(userInput) << "\n";
 	std::cout << "Hex representation: ";
+	StringToBinary(userInput);
 	PrintConsoleHex();
-	//std::cout << "Two's Complement Representation: ";
-	//ConvertToTwosComplement();
+	std::cout << "String Representation: " << StringToBinary(userInput) << "\n";
+	std::cout << "Two's Complement Representation: ";
 	PrintConsoleHex();
 }
 
 void int128_t::PrintConsoleHex()
 {
-	for (int i = 0; i < BYTE_SIZE; ++i)
+	for (size_t i = 0; i < BYTE_SIZE; ++i)
 	{
 		printf("%02x ", bin[i]);
 	}
@@ -133,12 +141,8 @@ void int128_t::ConvertToTwosComplement()
 		ToggleBit(i);
 	}
 
-	for (int i = 0; i < BIT_SIZE; ++i)
-	{ // add one
-		ToggleBit(i);
-		if (GetBit(i) == 0)
-			break;
-	}
+	int128_t one("1");
+	*this = *this + one;
 
 }
 
@@ -149,19 +153,244 @@ std::string int128_t::GetPolishNotation(std::string in)
 
 // Overload Operators
 
-int128_t int128_t::operator+(const int128_t& rhs)
+int128_t operator+(const int128_t& rhs1, const int128_t& lhs1)
 {
-	for (int i = 0; i < BYTE_SIZE; ++i)
+	bool carry = false;
+	int128_t rhs(rhs1);
+	int128_t lhs(lhs1);
+
+	for (size_t i = 0; i < BIT_SIZE; ++i)
 	{
-		bin[i] += rhs.bin[i];
+		if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 1)
+		{
+			if (carry == true)
+				rhs.UnsetBit(i);
+			else
+			{
+				rhs.SetBit(i);
+			}
+		}
+		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 1)
+		{
+			if (carry == true)
+				rhs.SetBit(i);
+			else
+			{
+				carry = true;
+				rhs.UnsetBit(i);
+			}
+
+		}
+		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
+		{
+			if (carry == true)
+				rhs.UnsetBit(i);
+			else
+				rhs.SetBit(i);
+		}
+		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 0)
+		{
+			if (carry == true)
+			{
+				rhs.SetBit(i);
+				carry = false;
+			}
+			else
+				rhs.UnsetBit(i);
+		}
 	}
-	return *this;
+	return rhs;
+}
+
+int128_t operator-(const int128_t& rhs1, const int128_t& lhs1)
+{
+	bool carry = false;
+	int128_t rhs(rhs1);
+	int128_t lhs(lhs1);
+
+	for (size_t i = 0; i < BIT_SIZE; ++i)
+	{
+		if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 1)
+		{
+			if (carry == true)
+				rhs.UnsetBit(i);
+			else
+			{
+				rhs.SetBit(i);
+				carry = true;
+			}
+		}
+		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 1)
+		{
+			if (carry == true)
+				rhs.SetBit(i);
+			else
+			{
+				rhs.UnsetBit(i);
+			}
+
+		}
+		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
+		{
+			if (carry == true)
+			{
+				carry = false;
+				rhs.UnsetBit(i);
+			}
+			else
+				rhs.SetBit(i);
+		}
+		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 0)
+		{
+			if (carry == true)
+			{
+				rhs.SetBit(i);
+				carry = false;
+			}
+			else
+				rhs.UnsetBit(i);
+		}
+	}
+
+	return rhs;
+
+}
+
+int128_t operator*(const int128_t& rhs1, const int128_t& lhs1)
+{
+	int128_t rhs(rhs1);
+	int128_t lhs(lhs1);
+
+
+
+	return rhs;
+}
+
+int128_t operator/(const int128_t& rhs1, const int128_t& lhs1)
+{
+	int128_t rhs(rhs1);
+	int128_t lhs(lhs1);
+
+	return rhs;
+}
+
+bool operator==(const int128_t& rhs1, const int128_t& lhs1)
+{
+	int128_t rhs(rhs1);
+	int128_t lhs(lhs1);
+
+	for (size_t i = 0; i < BIT_SIZE; ++i)
+	{
+		if (rhs.GetBit(i) != lhs.GetBit(i))
+			return false;
+	}
+	return true;
+}
+
+bool operator!=(const int128_t& rhs1, const int128_t& lhs1)
+{
+	int128_t rhs(rhs1);
+	int128_t lhs(lhs1);
+
+	for (size_t i = 0; i < BIT_SIZE; ++i)
+	{
+		if (rhs.GetBit(i) == lhs.GetBit(i))
+			return false;
+	}
+
+	return true;
+}
+
+bool operator<(const int128_t& rhs1, const int128_t& lhs1)
+{
+	int128_t rhs(rhs1);
+	int128_t lhs(lhs1);
+
+	for (int i = BIT_SIZE; i >= 0; --i)
+	{
+		if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 1)
+			continue;
+		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
+			return false;
+		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 1)
+			return true;
+		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 0)
+			continue;
+	}
+	return false;
+}
+
+bool operator<=(const int128_t& rhs1, const int128_t& lhs1)
+{
+	int128_t rhs(rhs1);
+	int128_t lhs(lhs1);
+
+	for (int i = BIT_SIZE; i >= 0; --i)
+	{
+		if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 1)
+			continue;
+		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
+			return false;
+		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 1)
+			return true;
+		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 0)
+			continue;
+	}
+
+	return true;
+}
+
+bool operator>(const int128_t& rhs1, const int128_t& lhs1)
+{
+	int128_t rhs(rhs1);
+	int128_t lhs(lhs1);
+
+	for (int i = BIT_SIZE; i >= 0; --i)
+	{
+		if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 1)
+			continue;
+		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
+			return true;
+		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 1)
+			return false;
+		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 0)
+			continue;
+	}
+
+	return false;
+}
+
+bool operator>=(const int128_t& rhs1, const int128_t& lhs1)
+{
+	int128_t rhs(rhs1);
+	int128_t lhs(lhs1);
+
+	for (int i = BIT_SIZE; i >= 0; --i)
+	{
+		if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 1)
+			continue;
+		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
+			return true;
+		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 1)
+			return false;
+		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 0)
+			continue;
+	}
+
+	return true;
 }
 
 // Conversion
 
 std::string int128_t::StringToBinary(std::string in)
 {
+	bool flag = false;
+	if (in[0] == '-')
+	{ // if it's a negative number
+		flag = true;
+		in = in.substr(1, in.length() - 1);
+	}
+
 	for (size_t i = 0; i < in.length(); ++i)
 		in[i] -= '0';
 	std::string out;
@@ -171,7 +400,8 @@ std::string int128_t::StringToBinary(std::string in)
 		out.insert(0, 1, '0' + (in[in.length() - 1] & 1));
 		if ((in[in.length() - 1] & 1) == 1)
 			SetBit(count);
-
+		else
+			UnsetBit(count);
 		++count;
 
 		char overflow = 0;
@@ -191,6 +421,10 @@ std::string int128_t::StringToBinary(std::string in)
 			in[i] /= 2;
 		}
 	}
+
+	if (flag == true)
+		this->ConvertToTwosComplement();
+
 	return out;
 
 }
@@ -219,6 +453,7 @@ void int128_t::ToggleBit(const size_t& pos)
 	size_t r_pos_bit = pos >= 8 ? pos % 8 : pos;
 
 	bin[r_pos_byte] ^= (1 << r_pos_bit);
+	//bin[r_pos_byte] &= ~(1 << r_pos_bit);
 }
 
 char int128_t::GetBit(const size_t& pos)
@@ -226,5 +461,5 @@ char int128_t::GetBit(const size_t& pos)
 	size_t r_pos_byte = 15 - (pos / 8);
 	size_t r_pos_bit = pos >= 8 ? pos % 8 : pos;
 
-	return (1 & (bin[r_pos_byte] >> (pos - 1)));
+	return (1 & (bin[r_pos_byte] >> (r_pos_bit)));
 }
