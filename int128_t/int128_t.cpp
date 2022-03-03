@@ -40,6 +40,21 @@ bool equalOrHigher(char op1, char op2)
 
 }
 
+int128_t operation(int128_t a, int128_t b, char op)
+{
+	int128_t zero("0");
+	if (op == '+')
+		return a + b;
+	else if (op == '-')
+		return a - b;
+	else if (op == '*')
+		return a * b;
+	else if (op == '/')
+		return a / b;
+	else
+		return zero;
+}
+
 std::string infixToPostfix(std::string infix)
 {
 	std::stack <char> s;
@@ -84,6 +99,33 @@ std::string infixToPostfix(std::string infix)
 	return postfix;
 }
 
+int128_t postfixEval(const std::string& postfix)
+{
+	int128_t a;
+	int128_t b;
+	std::string infix;
+	std::stack<int128_t> s;
+
+	for (int i = 0; i < postfix.length(); ++i)
+	{
+		if (!isOperator(postfix[i]))
+		{
+			a = s.top();
+			s.pop();
+			b = s.top();
+			s.pop();
+			s.push(operation(a, b, postfix[i]));
+		}
+		else if (isOperand(postfix[i]))
+		{
+			std::string t;
+			t.push_back(postfix[i]);
+			s.push(t);
+		}
+	}
+	return s.top();
+}
+
 // Constructor
 
 int128_t::int128_t()
@@ -114,13 +156,16 @@ void int128_t::ReadConsoleString()
 
 	std::cout << "Hex representation: ";
 	StringToBinary(userInput);
-	PrintConsoleHex();
+	PrintHex();
 	std::cout << "String Representation: " << StringToBinary(userInput) << "\n";
-	std::cout << "Two's Complement Representation: ";
-	PrintConsoleHex();
+	std::cout << "\nBinary Representation: ";
+	PrintBinary();
+	std::cout << "\nDecimal Representation: ";
+	PrintDecimal();
+	std::cout << "\n";
 }
 
-void int128_t::PrintConsoleHex()
+void int128_t::PrintHex()
 {
 	for (size_t i = 0; i < BYTE_SIZE; ++i)
 	{
@@ -129,10 +174,34 @@ void int128_t::PrintConsoleHex()
 	std::cout << "\n";
 }
 
-void int128_t::PrintConsoleBinary()
+void int128_t::ReadBinaryFile(const std::string& file_path)
 {
+	std::ifstream MyFile(file_path);
+
+	MyFile.close();
+}
+
+void int128_t::WriteBinaryFile(const std::string& file_path)
+{
+	std::ofstream MyFile(file_path);
+
+	MyFile.close();
+}
+
+
+std::string int128_t::GetPolishNotation(std::string in)
+{
+	return infixToPostfix(in) + '\n';
+}
+
+void int128_t::evalPolishNotation(const std::string& rhs)
+{
+	*this = postfixEval(rhs);
+	PrintBinary();
 
 }
+
+// Convert
 
 void int128_t::ConvertToTwosComplement()
 {
@@ -146,9 +215,71 @@ void int128_t::ConvertToTwosComplement()
 
 }
 
-std::string int128_t::GetPolishNotation(std::string in)
+void int128_t::PrintBinary()
 {
-	return infixToPostfix(in) + '\n';
+	std::string binary;
+	int count = 0;
+	for (int i = BIT_SIZE; i >= 0; --i)
+	{
+		if (count == 8) //padding
+		{
+			count = 0;
+			binary.push_back(' ');
+		}
+		if (GetBit(i) == 1)
+			binary.push_back('1');
+		else if (GetBit(i) == 0)
+			binary.push_back('0');
+		++count;
+	}
+
+	std::cout << binary;
+}
+
+void int128_t::PrintDecimal()
+{
+	std::string binAsString = BinaryToString();
+	std::string result{};
+	bool flag = false;
+
+	constexpr unsigned int numberBase{ 10 };
+
+	if (GetBit(BIT_SIZE) == 1)
+	{
+		UnsetBit(BIT_SIZE);
+		flag = true;
+		binAsString = BinaryToString();
+	}
+
+	do {
+
+		unsigned int remainder{};
+		std::string dividedNumberAsString{};
+
+		for (const char bit : binAsString)
+		{
+			remainder = remainder * 2 + (bit - '0');
+
+			if (remainder >= numberBase)
+			{ //overflow i.e. in the 10th
+
+				remainder -= numberBase;
+				dividedNumberAsString += "1";
+			}
+			else
+				dividedNumberAsString += "0";
+
+		}
+		binAsString = dividedNumberAsString;
+		result.insert(0, 1, '0' + remainder);
+
+	} while (std::count(binAsString.begin(), binAsString.end(), '1'));
+
+	if (flag)
+		result.insert(0, "-");
+
+	std::cout << result;
+
 }
 
 // Overload Operators
@@ -260,10 +391,32 @@ int128_t operator*(const int128_t& rhs1, const int128_t& lhs1)
 {
 	int128_t rhs(rhs1);
 	int128_t lhs(lhs1);
+	int128_t zero("0");
+	int128_t one("1");
 
+	if (rhs == zero || lhs == zero)
+		return zero;
 
+	if (rhs == one)
+		return lhs;
 
-	return rhs;
+	if (lhs == one)
+		return rhs;
+
+	int128_t result;
+
+	while (!(lhs == zero))
+	{
+
+		if (lhs.GetBit(0) & 1)
+		{
+			result = result + rhs;
+		}
+		rhs << 1;
+		lhs >> 1;
+	}
+
+	return result;
 }
 
 int128_t operator/(const int128_t& rhs1, const int128_t& lhs1)
@@ -380,6 +533,68 @@ bool operator>=(const int128_t& rhs1, const int128_t& lhs1)
 	return true;
 }
 
+int128_t& int128_t::operator++()
+{ //prefix increment
+	int128_t temp("1");
+	*this = *this + temp;
+	return *this;
+}
+
+int128_t& int128_t::operator++(int)
+{ //postfix increment
+	int128_t temp = *this;
+	++(*this);
+	return temp;
+}
+
+int128_t& int128_t::operator--()
+{ //prefix decrement
+	int128_t temp("1");
+	*this = *this - temp;
+	return *this;
+}
+
+int128_t& int128_t::operator--(int)
+{ //postfix decrement
+	int128_t temp = *this;
+	--(*this);
+	return temp;
+}
+
+int128_t& int128_t::operator<<(const int& pos)
+{
+	for (int i = BIT_SIZE; i >= 0; --i)
+	{ // set bit @ i - pos
+		if (GetBit(i) == 1)
+			if (i + pos <= BIT_SIZE)
+			{
+				SetBit(i + pos);
+				UnsetBit(i);
+			}
+			else
+				UnsetBit(i);
+	}
+
+
+	return *this;
+}
+
+int128_t& int128_t::operator>>(const int& pos)
+{
+	for (int i = 0; i < BIT_SIZE; ++i)
+	{
+		if (GetBit(i) == 1)
+			if (i - pos >= 0)
+			{
+				SetBit(i - pos);
+				UnsetBit(i);
+			}
+			else
+				UnsetBit(i);
+	}
+	return *this;
+}
+
 // Conversion
 
 std::string int128_t::StringToBinary(std::string in)
@@ -389,6 +604,7 @@ std::string int128_t::StringToBinary(std::string in)
 	{ // if it's a negative number
 		flag = true;
 		in = in.substr(1, in.length() - 1);
+		SetBit(BIT_SIZE);
 	}
 
 	for (size_t i = 0; i < in.length(); ++i)
@@ -422,11 +638,25 @@ std::string int128_t::StringToBinary(std::string in)
 		}
 	}
 
-	if (flag == true)
-		this->ConvertToTwosComplement();
+	//if (flag == true)
+		//this->ConvertToTwosComplement();
 
 	return out;
 
+}
+
+std::string int128_t::BinaryToString()
+{
+	std::string result;
+	for (int i = BIT_SIZE; i >= 0; --i)
+	{
+		if (GetBit(i) == 1)
+			result.push_back('1');
+		else if (GetBit(i) == 0)
+			result.push_back('0');
+	}
+
+	return result;
 }
 
 // Bit manipulation
