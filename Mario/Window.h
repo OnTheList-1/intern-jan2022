@@ -75,7 +75,8 @@ void Window::run()
                 SDL_Log("Requesting to quit.");
             }
         }
-        SDL_UpdateWindowSurface(window);
+        SDL_UpdateWindowSurface(this->window);
     }
     SDL_Log("Request Granted.");
+    SDL_DestroyWindow(this->window);
 }

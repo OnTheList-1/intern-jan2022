@@ -70,12 +70,74 @@ void testMultiply()
 
 void testDivide()
 {
+	int128_t num1("3750");
+	int128_t num2("75");
+
+	std::cout << "Testing division ...";
+
+	int128_t num3(num1 / num2);
+	num3.PrintDecimal();
+	std::cout << "\n";
 
 }
 
 void testLogical()
 {
 
+}
+
+void testReadFileText(std::vector<int128_t>& data)
+{
+	std::cout << "Read Text File Test: ";
+	std::string file_path = "bin_file.txt";
+	int128_t num;
+	data = num.ReadTextFile(file_path);
+	for (int i = 0; i < data.size(); ++i)
+	{
+		data[i].PrintDecimal();
+		std::cout << " ";
+	}
+	std::cout << "\n";
+}
+
+void testReadFileBinary(std::vector<int128_t>& data1, std::vector<int128_t>& data2)
+{
+	std::cout << "Test read file binary ... \n";
+	std::cout << "Testing Big Endian file: ";
+	std::string file_path = "sample.bin";
+	int128_t num;
+	data1 = num.ReadBinaryFile(file_path);
+	for (int i = 0; i < data1.size(); ++i)
+	{
+		data1[i].PrintDecimal();
+		std::cout << " ";
+	}
+
+	std::cout << "\nTesting Little Endian file: ";
+	std::string file_path1 = "sample_le.bin";
+	int128_t num1;
+	data2 = num1.ReadBinaryFile(file_path1);
+	for (int i = 0; i < data2.size(); ++i)
+	{
+		data2[i].PrintDecimal();
+		std::cout << " ";
+	}
+	std::cout << "\n";
+}
+
+void testWriteToFileText(std::vector<int128_t>& data3)
+{
+	int128_t num;
+	num.WriteTextFile("write_text.txt", data3);
+}
+
+void testWriteToFileBinary(std::vector<int128_t> data0, std::vector<int128_t>data1)
+{
+	int128_t num;
+	num.WriteBinaryFile("write_binary.txt", data0, true);
+
+	int128_t num1;
+	num1.WriteBinaryFile("write_binary_le.txt", data1, false);
 }
 
 void testBitwise()
@@ -107,6 +169,10 @@ void testConvertType()
 
 void RunAllTests()
 {
+	std::vector<int128_t> data0;
+	std::vector<int128_t> data1;
+	std::vector<int128_t> data2;
+
 	std::cout << "Test Cases for int128_t datatype: \n";
 	testConstructors();
 	testAdd();
@@ -116,4 +182,8 @@ void RunAllTests()
 	testLogical();
 	testBitwise();
 	testConvertType();
+	testReadFileText(data0);
+	testReadFileBinary(data1, data2);
+	testWriteToFileText(data0);
+	testWriteToFileBinary(data1, data2);
 }

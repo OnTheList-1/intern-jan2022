@@ -165,25 +165,165 @@ void int128_t::ReadConsoleString()
 	std::cout << "\n";
 }
 
-void int128_t::PrintHex()
+std::vector<int128_t> int128_t::ReadTextFile(const std::string& file_path)
 {
-	for (size_t i = 0; i < BYTE_SIZE; ++i)
-	{
-		printf("%02x ", bin[i]);
-	}
-	std::cout << "\n";
-}
-
-void int128_t::ReadBinaryFile(const std::string& file_path)
-{
+	std::vector<int128_t> data;
 	std::ifstream MyFile(file_path);
 
+	if (!MyFile)
+		std::cout << "can't locate the specified file path\n";
+	else
+	{
+		char ch;
+		MyFile >> ch;
+		unsigned int n = ch - '0';
+		std::string decimal = "";
+		MyFile.get(ch);
+		ch = 0;
+		for (unsigned int i = 0; i < n; i)
+		{
+			MyFile.get(ch);
+			if (ch == ' ' || MyFile.eof())
+			{
+				int128_t temp(decimal);
+				data.push_back(temp);
+				decimal = "";
+				++i;
+			}
+			else
+			{
+				decimal += ch;
+			}
+
+		}
+	}
+	MyFile.close();
+	return data;
+}
+
+std::vector<int128_t> int128_t::ReadBinaryFile(const std::string& file_path)
+{
+	std::vector<int128_t> data;
+	std::ifstream MyFile(file_path, std::ios::binary);
+
+	if (!MyFile)
+		std::cout << "Can't locate the specified file path.";
+	else
+	{
+		char ch;
+		int128_t buffer;
+		std::string bom = "";
+
+		// Read first two bytes
+		MyFile.read((char*)&buffer, 2);
+
+		if (buffer.GetBit(120) == 1)
+		{ // little endian
+			int128_t length;
+			//get the length of the file[n]
+			MyFile.read((char*)&length, 16);
+			length.BigEndianToLittleEndian();
+
+			for (int i = 0; length > i; ++i)
+			{
+				int128_t num;
+				MyFile.read((char*)&num, 16);
+				num.BigEndianToLittleEndian();
+				data.push_back(num);
+			}
+
+		}
+		else if (buffer.GetBit(120) == 0)
+		{ // big endian
+			int128_t length;
+			// Get the length of the file [n]
+			MyFile.read((char*)&length, 16);
+
+			for (int i = 0; length > i; ++i)
+			{ // loop till n; where n = length
+				int128_t num;
+				MyFile.read((char*)&num, 16);
+				data.push_back(num);
+			}
+		}
+		else
+		{
+			std::cout << "Can't read the file's bom.\n";
+			return data;
+		}
+	}
+
+	std::cout << "\n";
+
+	MyFile.close();
+	return data;
+}
+
+void int128_t::WriteTextFile(const std::string& file_path, std::vector<int128_t> data)
+{
+	std::ofstream MyFile(file_path);
+	std::string length;
+
+	// print the size
+	length = std::to_string(data.size());
+	MyFile << length << " ";
+	if (MyFile)
+	{
+		for (int i = 0; i < data.size(); ++i)
+		{
+			std::string dataString = data[i].int128ToDecimal();
+			MyFile << dataString << " ";
+		}
+	}
+	else
+	{
+		std::cout << "can't create the file";
+	}
 	MyFile.close();
 }
 
-void int128_t::WriteBinaryFile(const std::string& file_path)
+void int128_t::WriteBinaryFile(const std::string& file_path, std::vector<int128_t>data, const bool& bom)
 {
-	std::ofstream MyFile(file_path);
+	std::ofstream MyFile(file_path, std::ios::binary | std::ios::out);
+	uint16_t bigEndian = 65279;
+	uint16_t littleEndian = 65534;
+	std::string length = std::to_string(data.size());
+	int128_t length1(length);
+
+	// Write first two bytes bom
+	if (bom)
+	{
+		// Write length
+		MyFile.write((char*)&littleEndian, sizeof(uint16_t));
+		length1.BigEndianToLittleEndian();
+		MyFile.write((char*)&length1, sizeof(int128_t));
+	}
+	else
+	{
+		MyFile.write((char*)&bigEndian, sizeof(uint16_t));
+		MyFile.write((char*)&length1, sizeof(int128_t));
+	}
+
+
+	if (MyFile)
+	{
+		if (bom == false)
+		{ // little endian
+			for (int i = 0; i < data.size(); ++i)
+			{
+				data[i].BigEndianToLittleEndian();
+				MyFile.write((char*)&data[i], sizeof(int128_t));
+			}
+		}
+		else
+		{ // big endian
+			for (int i = 0; i < data.size(); ++i)
+			{
+				MyFile.write((char*)&data[i], sizeof(int128_t));
+			}
+		}
+	}
+
 
 	MyFile.close();
 }
@@ -201,7 +341,7 @@ void int128_t::evalPolishNotation(const std::string& rhs)
 
 }
 
-// Convert
+// Print & Convert
 
 void int128_t::ConvertToTwosComplement()
 {
@@ -213,6 +353,15 @@ void int128_t::ConvertToTwosComplement()
 	int128_t one("1");
 	*this = *this + one;
 
+}
+
+void int128_t::PrintHex()
+{
+	for (size_t i = 0; i < BYTE_SIZE; ++i)
+	{
+		printf("%02x ", bin[i]);
+	}
+	std::cout << "\n";
 }
 
 void int128_t::PrintBinary()
@@ -233,52 +382,16 @@ void int128_t::PrintBinary()
 		++count;
 	}
 
+	size_t pad = binary.find('1');
+	binary = binary.substr(pad, binary.length() - 1);
+
 	std::cout << binary;
 }
 
 void int128_t::PrintDecimal()
 {
-	std::string binAsString = BinaryToString();
-	std::string result{};
-	bool flag = false;
 
-	constexpr unsigned int numberBase{ 10 };
-
-	if (GetBit(BIT_SIZE) == 1)
-	{
-		UnsetBit(BIT_SIZE);
-		flag = true;
-		binAsString = BinaryToString();
-	}
-
-	do {
-
-		unsigned int remainder{};
-		std::string dividedNumberAsString{};
-
-		for (const char bit : binAsString)
-		{
-			remainder = remainder * 2 + (bit - '0');
-
-			if (remainder >= numberBase)
-			{ //overflow i.e. in the 10th
-
-				remainder -= numberBase;
-				dividedNumberAsString += "1";
-			}
-			else
-				dividedNumberAsString += "0";
-
-		}
-		binAsString = dividedNumberAsString;
-		result.insert(0, 1, '0' + remainder);
-
-	} while (std::count(binAsString.begin(), binAsString.end(), '1'));
-
-	if (flag)
-		result.insert(0, "-");
-
-	std::cout << result;
+	std::cout << int128ToDecimal();
 
 }
 
@@ -423,8 +536,34 @@ int128_t operator/(const int128_t& rhs1, const int128_t& lhs1)
 {
 	int128_t rhs(rhs1);
 	int128_t lhs(lhs1);
+	int128_t one("1");
+	int128_t zero("0");
+	int128_t result;
+	int128_t temp("1");
+	if (lhs == rhs)
+		return one;
+	if (rhs < lhs)
+		return zero;
 
-	return rhs;
+	while (lhs <= rhs)
+	{
+		lhs = lhs << 1;
+		temp = temp << 1;
+	}
+
+	while (temp > one)
+	{
+		lhs = lhs >> 1;
+		temp = temp >> 1;
+		if (rhs >= lhs)
+		{
+			rhs = rhs - lhs;
+			result = result + temp;
+		}
+	}
+
+
+	return result;
 }
 
 bool operator==(const int128_t& rhs1, const int128_t& lhs1)
@@ -595,6 +734,30 @@ int128_t& int128_t::operator>>(const int& pos)
 	return *this;
 }
 
+bool operator>(const int128_t& rhs1, const int& lhs1)
+{
+	int128_t rhs(rhs1);
+	int128_t lhs(std::to_string(lhs1));
+
+	return rhs > lhs;
+}
+
+bool operator<(const int128_t& rhs1, const int& lhs1)
+{
+	int128_t rhs(rhs1);
+	int128_t lhs(std::to_string(lhs1));
+
+	return rhs < lhs;
+}
+
+bool operator==(const int128_t& rhs1, const int& lhs1)
+{
+	int128_t rhs(rhs1);
+	int128_t lhs(std::to_string(lhs1));
+
+	return rhs == lhs;
+}
+
 // Conversion
 
 std::string int128_t::StringToBinary(std::string in)
@@ -657,6 +820,61 @@ std::string int128_t::BinaryToString()
 	}
 
 	return result;
+}
+
+std::string int128_t::int128ToDecimal()
+{
+	std::string binAsString = BinaryToString();
+	std::string result{};
+	bool flag = false;
+
+	constexpr unsigned int numberBase{ 10 };
+
+	if (GetBit(BIT_SIZE) == 1)
+	{
+		UnsetBit(BIT_SIZE);
+		flag = true;
+		binAsString = BinaryToString();
+	}
+
+	do {
+
+		unsigned int remainder{};
+		std::string dividedNumberAsString{};
+
+		for (const char bit : binAsString)
+		{
+			remainder = remainder * 2 + (bit - '0');
+
+			if (remainder >= numberBase)
+			{ //overflow i.e. in the 10th
+
+				remainder -= numberBase;
+				dividedNumberAsString += "1";
+			}
+			else
+				dividedNumberAsString += "0";
+
+		}
+		binAsString = dividedNumberAsString;
+		result.insert(0, 1, '0' + remainder);
+
+	} while (std::count(binAsString.begin(), binAsString.end(), '1'));
+
+	if (flag)
+		result.insert(0, "-");
+
+	return result;
+}
+
+void int128_t::BigEndianToLittleEndian()
+{
+	for (size_t i = 0; i < BYTE_SIZE / 2; ++i)
+	{
+		uint8_t temp = bin[i];
+		bin[i] = bin[BYTE_SIZE - i - 1];
+		bin[BYTE_SIZE - i - 1] = temp;
+	}
 }
 
 // Bit manipulation

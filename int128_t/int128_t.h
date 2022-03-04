@@ -5,9 +5,10 @@
 #include <string>
 #include <stack>
 #include <fstream>
+#include <vector>
 
 #define BYTE_SIZE 16
-#define BIT_SIZE 127
+#define BIT_SIZE 126
 
 class int128_t
 {
@@ -18,8 +19,10 @@ public:
 
 
 	void ReadConsoleString(); //implemented
-	void ReadBinaryFile(const std::string&);
-	void WriteBinaryFile(const std::string&);
+	std::vector<int128_t> ReadTextFile(const std::string&); //implemented
+	std::vector<int128_t> ReadBinaryFile(const std::string&);  //implemented
+	void WriteBinaryFile(const std::string&, std::vector<int128_t>, const bool&);
+	void WriteTextFile(const std::string&, std::vector<int128_t>);
 
 	void ConvertToTwosComplement(); //implemented ?
 	void PrintBinary(); //implemented
@@ -32,7 +35,10 @@ public:
 	char GetBit(const size_t&); //implemented
 
 	std::string StringToBinary(std::string); //implemented
-	std::string BinaryToString();
+	std::string BinaryToString(); //implemented
+	std::string int128ToDecimal(); //implemented
+	void BigEndianToLittleEndian(); //implemented
+
 	std::string GetPolishNotation(std::string); //implemented
 	void evalPolishNotation(const std::string&); //implemented
 
@@ -52,6 +58,10 @@ public:
 	int128_t& operator--(int); //implemented
 	int128_t& operator<<(const int&); //implemented
 	int128_t& operator>>(const int&); //implemented
+
+	friend bool operator>(const int128_t&, const int&); //implemented
+	friend bool operator<(const int128_t&, const int&); //implemented
+	friend bool operator==(const int128_t&, const int&); //implemented
 
 private:
 	uint8_t bin[BYTE_SIZE];

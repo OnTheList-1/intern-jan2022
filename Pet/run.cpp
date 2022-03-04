@@ -10,6 +10,7 @@ void run()
     int flag = 5;
     std::vector<Cat> cat;
     std::vector<Dog> dog;
+    std::vector<Pet> Pet;
     do
     {
         std::cout << "Enter 0 to quit.\n";
@@ -60,6 +61,7 @@ void run()
 
             kitty.petInfo();
             cat.push_back(kitty);
+            Pet.push_back(kitty);
             std::cout << "Pushed kitty in vector.\n\n";
         }
 
@@ -107,6 +109,7 @@ void run()
 
             doggo.petInfo();
             dog.push_back(doggo);
+            Pet.push_back(doggo);
             std::cout << "Pushed doggo in vector.\n\n";
         }
 

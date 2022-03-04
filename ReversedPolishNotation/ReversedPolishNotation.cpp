@@ -75,7 +75,7 @@ std::string infixToPostfix(std::string infix)
 		}
 		else if (ch == ')')
 		{
-			while (!s.empty() && s.top() != '(')
+			while (!s.empty() && s.top())
 			{
 				postfix += s.top();
 				s.pop();
@@ -91,6 +91,4 @@ int main()
 	std::string infix = "((2+9)*3)-5";
 
 	std::cout << infixToPostfix(infix) << std::endl;
-
-
 }
