@@ -1,5 +1,7 @@
 #include "int128_t.h"
-// Reverse Polish Notation functions
+
+#pragma region Polish Notation
+
 bool isOperator(char c)
 {
 	if (c == '+' || c == '-' || c == '/' || c == '*')
@@ -126,7 +128,21 @@ int128_t postfixEval(const std::string& postfix)
 	return s.top();
 }
 
-// Constructor
+std::string int128_t::GetPolishNotation(std::string in)
+{
+	return infixToPostfix(in) + '\n';
+}
+
+void int128_t::evalPolishNotation(const std::string& rhs)
+{
+	*this = postfixEval(rhs);
+	PrintBinary();
+
+}
+
+#pragma endregion
+
+#pragma region Constructor
 
 int128_t::int128_t()
 {
@@ -144,7 +160,9 @@ int128_t::int128_t(const int128_t& rhs)
 	memcpy_s(bin, BYTE_SIZE, rhs.bin, BYTE_SIZE);
 }
 
-// Read and Write
+#pragma endregion
+
+#pragma region Read and Write
 
 void int128_t::ReadConsoleString()
 {
@@ -328,19 +346,9 @@ void int128_t::WriteBinaryFile(const std::string& file_path, std::vector<int128_
 	MyFile.close();
 }
 
+#pragma endregion
 
-std::string int128_t::GetPolishNotation(std::string in)
-{
-	return infixToPostfix(in) + '\n';
-}
-
-void int128_t::evalPolishNotation(const std::string& rhs)
-{
-	*this = postfixEval(rhs);
-	PrintBinary();
-
-}
-
+#pragma region Print and Convert
 // Print & Convert
 
 void int128_t::ConvertToTwosComplement()
@@ -355,46 +363,15 @@ void int128_t::ConvertToTwosComplement()
 
 }
 
-void int128_t::PrintHex()
-{
-	for (size_t i = 0; i < BYTE_SIZE; ++i)
-	{
-		printf("%02x ", bin[i]);
-	}
-	std::cout << "\n";
-}
-
-void int128_t::PrintBinary()
-{
-	std::string binary;
-	int count = 0;
-	for (int i = BIT_SIZE; i >= 0; --i)
-	{
-		if (count == 8) //padding
-		{
-			count = 0;
-			binary.push_back(' ');
-		}
-		if (GetBit(i) == 1)
-			binary.push_back('1');
-		else if (GetBit(i) == 0)
-			binary.push_back('0');
-		++count;
-	}
-
-	size_t pad = binary.find('1');
-	binary = binary.substr(pad, binary.length() - 1);
-
-	std::cout << binary;
-}
-
 void int128_t::PrintDecimal()
 {
-
 	std::cout << int128ToDecimal();
 
 }
 
+#pragma endregion
+
+#pragma region Overload Operators
 // Overload Operators
 
 int128_t operator+(const int128_t& rhs1, const int128_t& lhs1)
@@ -413,8 +390,9 @@ int128_t operator+(const int128_t& rhs1, const int128_t& lhs1)
 			{
 				rhs.SetBit(i);
 			}
+			continue;
 		}
-		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 1)
+		if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 1)
 		{
 			if (carry == true)
 				rhs.SetBit(i);
@@ -423,16 +401,18 @@ int128_t operator+(const int128_t& rhs1, const int128_t& lhs1)
 				carry = true;
 				rhs.UnsetBit(i);
 			}
+			continue;
 
 		}
-		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
+		if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
 		{
 			if (carry == true)
 				rhs.UnsetBit(i);
 			else
 				rhs.SetBit(i);
+			continue;
 		}
-		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 0)
+		if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 0)
 		{
 			if (carry == true)
 			{
@@ -441,6 +421,7 @@ int128_t operator+(const int128_t& rhs1, const int128_t& lhs1)
 			}
 			else
 				rhs.UnsetBit(i);
+			continue;
 		}
 	}
 	return rhs;
@@ -463,8 +444,9 @@ int128_t operator-(const int128_t& rhs1, const int128_t& lhs1)
 				rhs.SetBit(i);
 				carry = true;
 			}
+			continue;
 		}
-		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 1)
+		if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 1)
 		{
 			if (carry == true)
 				rhs.SetBit(i);
@@ -472,9 +454,10 @@ int128_t operator-(const int128_t& rhs1, const int128_t& lhs1)
 			{
 				rhs.UnsetBit(i);
 			}
+			continue;
 
 		}
-		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
+		if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
 		{
 			if (carry == true)
 			{
@@ -483,8 +466,9 @@ int128_t operator-(const int128_t& rhs1, const int128_t& lhs1)
 			}
 			else
 				rhs.SetBit(i);
+			continue;
 		}
-		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 0)
+		if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 0)
 		{
 			if (carry == true)
 			{
@@ -493,6 +477,7 @@ int128_t operator-(const int128_t& rhs1, const int128_t& lhs1)
 			}
 			else
 				rhs.UnsetBit(i);
+			continue;
 		}
 	}
 
@@ -581,16 +566,7 @@ bool operator==(const int128_t& rhs1, const int128_t& lhs1)
 
 bool operator!=(const int128_t& rhs1, const int128_t& lhs1)
 {
-	int128_t rhs(rhs1);
-	int128_t lhs(lhs1);
-
-	for (size_t i = 0; i < BIT_SIZE; ++i)
-	{
-		if (rhs.GetBit(i) == lhs.GetBit(i))
-			return false;
-	}
-
-	return true;
+	return !(rhs1 == lhs1);
 }
 
 bool operator<(const int128_t& rhs1, const int128_t& lhs1)
@@ -600,36 +576,17 @@ bool operator<(const int128_t& rhs1, const int128_t& lhs1)
 
 	for (int i = BIT_SIZE; i >= 0; --i)
 	{
-		if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 1)
-			continue;
-		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
+		if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
 			return false;
-		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 1)
+		if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 1)
 			return true;
-		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 0)
-			continue;
 	}
 	return false;
 }
 
 bool operator<=(const int128_t& rhs1, const int128_t& lhs1)
 {
-	int128_t rhs(rhs1);
-	int128_t lhs(lhs1);
-
-	for (int i = BIT_SIZE; i >= 0; --i)
-	{
-		if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 1)
-			continue;
-		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
-			return false;
-		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 1)
-			return true;
-		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 0)
-			continue;
-	}
-
-	return true;
+	return (rhs1 < lhs1) || (rhs1 == lhs1);
 }
 
 bool operator>(const int128_t& rhs1, const int128_t& lhs1)
@@ -639,14 +596,10 @@ bool operator>(const int128_t& rhs1, const int128_t& lhs1)
 
 	for (int i = BIT_SIZE; i >= 0; --i)
 	{
-		if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 1)
-			continue;
-		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
+		if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
 			return true;
-		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 1)
+		if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 1)
 			return false;
-		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 0)
-			continue;
 	}
 
 	return false;
@@ -654,22 +607,7 @@ bool operator>(const int128_t& rhs1, const int128_t& lhs1)
 
 bool operator>=(const int128_t& rhs1, const int128_t& lhs1)
 {
-	int128_t rhs(rhs1);
-	int128_t lhs(lhs1);
-
-	for (int i = BIT_SIZE; i >= 0; --i)
-	{
-		if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 1)
-			continue;
-		else if (rhs.GetBit(i) == 1 && lhs.GetBit(i) == 0)
-			return true;
-		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 1)
-			return false;
-		else if (rhs.GetBit(i) == 0 && lhs.GetBit(i) == 0)
-			continue;
-	}
-
-	return true;
+	return (rhs1 > lhs1) || (rhs1 == lhs1);
 }
 
 int128_t& int128_t::operator++()
@@ -734,29 +672,30 @@ int128_t& int128_t::operator>>(const int& pos)
 	return *this;
 }
 
-bool operator>(const int128_t& rhs1, const int& lhs1)
+bool operator>(const int128_t& rhs, const int& lhs1)
 {
-	int128_t rhs(rhs1);
 	int128_t lhs(std::to_string(lhs1));
 
 	return rhs > lhs;
 }
 
-bool operator<(const int128_t& rhs1, const int& lhs1)
+bool operator<(const int128_t& rhs, const int& lhs1)
 {
-	int128_t rhs(rhs1);
 	int128_t lhs(std::to_string(lhs1));
 
 	return rhs < lhs;
 }
 
-bool operator==(const int128_t& rhs1, const int& lhs1)
+bool operator==(const int128_t& rhs, const int& lhs1)
 {
-	int128_t rhs(rhs1);
 	int128_t lhs(std::to_string(lhs1));
 
 	return rhs == lhs;
 }
+
+#pragma endregion
+
+#pragma region Conversion
 
 // Conversion
 
@@ -877,6 +816,9 @@ void int128_t::BigEndianToLittleEndian()
 	}
 }
 
+#pragma endregion
+
+#pragma region Bit Manipulation
 // Bit manipulation
 
 void int128_t::SetBit(const size_t& pos)
@@ -911,3 +853,5 @@ char int128_t::GetBit(const size_t& pos)
 
 	return (1 & (bin[r_pos_byte] >> (r_pos_bit)));
 }
+
+#pragma endregion
