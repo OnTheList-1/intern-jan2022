@@ -136,8 +136,7 @@ std::string int128_t::GetPolishNotation(std::string in)
 void int128_t::evalPolishNotation(const std::string& rhs)
 {
 	*this = postfixEval(rhs);
-	PrintBinary();
-
+	PrintDecimal();
 }
 
 #pragma endregion
@@ -160,6 +159,15 @@ int128_t::int128_t(const int128_t& rhs)
 	memcpy_s(bin, BYTE_SIZE, rhs.bin, BYTE_SIZE);
 }
 
+int128_t::int128_t(uint8_t buffer[BYTE_SIZE])
+{
+	memset(bin, 0, BYTE_SIZE);
+	for (size_t i = 0; i < BYTE_SIZE; ++i)
+	{
+		bin[i] = buffer[i];
+	}
+}
+
 #pragma endregion
 
 #pragma region Read and Write
@@ -172,12 +180,7 @@ void int128_t::ReadConsoleString()
 	std::cout << "Enter your number: ";
 	std::cin >> userInput;
 
-	std::cout << "Hex representation: ";
 	StringToBinary(userInput);
-	PrintHex();
-	std::cout << "String Representation: " << StringToBinary(userInput) << "\n";
-	std::cout << "\nBinary Representation: ";
-	PrintBinary();
 	std::cout << "\nDecimal Representation: ";
 	PrintDecimal();
 	std::cout << "\n";
@@ -228,39 +231,43 @@ std::vector<int128_t> int128_t::ReadBinaryFile(const std::string& file_path)
 		std::cout << "Can't locate the specified file path.";
 	else
 	{
-		char ch;
-		int128_t buffer;
-		std::string bom = "";
+		uint16_t buffer;
+		uint8_t buffer1[BYTE_SIZE];
+		uint16_t bigEndian = 0xfffe;
+		uint16_t littleEndian = 0xfeff;
 
 		// Read first two bytes
 		MyFile.read((char*)&buffer, 2);
 
-		if (buffer.GetBit(120) == 1)
+		if (buffer == littleEndian)
 		{ // little endian
-			int128_t length;
+
 			//get the length of the file[n]
-			MyFile.read((char*)&length, 16);
+			MyFile.read((char*)&buffer1, 16);
+			int128_t length(buffer1);
 			length.BigEndianToLittleEndian();
 
 			for (int i = 0; length > i; ++i)
 			{
-				int128_t num;
-				MyFile.read((char*)&num, 16);
+				memset(buffer1, 0, sizeof(BYTE_SIZE));
+				MyFile.read((char*)&buffer1, 16);
+				int128_t num(buffer1);
 				num.BigEndianToLittleEndian();
 				data.push_back(num);
 			}
 
 		}
-		else if (buffer.GetBit(120) == 0)
+		else if (buffer == bigEndian)
 		{ // big endian
-			int128_t length;
 			// Get the length of the file [n]
-			MyFile.read((char*)&length, 16);
+			MyFile.read((char*)&buffer1, 16);
+			int128_t length(buffer1);
 
 			for (int i = 0; length > i; ++i)
 			{ // loop till n; where n = length
-				int128_t num;
-				MyFile.read((char*)&num, 16);
+				memset(buffer1, 0, sizeof(BYTE_SIZE));
+				MyFile.read((char*)&buffer1, 16);
+				int128_t num(buffer1);
 				data.push_back(num);
 			}
 		}
@@ -699,7 +706,7 @@ bool operator==(const int128_t& rhs, const int& lhs1)
 
 // Conversion
 
-std::string int128_t::StringToBinary(std::string in)
+void int128_t::StringToBinary(std::string in)
 {
 	bool flag = false;
 	if (in[0] == '-')
@@ -711,11 +718,9 @@ std::string int128_t::StringToBinary(std::string in)
 
 	for (size_t i = 0; i < in.length(); ++i)
 		in[i] -= '0';
-	std::string out;
 	int c = 1;
 	int count = 0;
 	while (in.length()) {
-		out.insert(0, 1, '0' + (in[in.length() - 1] & 1));
 		if ((in[in.length() - 1] & 1) == 1)
 			SetBit(count);
 		else
@@ -742,8 +747,6 @@ std::string int128_t::StringToBinary(std::string in)
 
 	//if (flag == true)
 		//this->ConvertToTwosComplement();
-
-	return out;
 
 }
 

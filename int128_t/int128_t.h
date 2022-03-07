@@ -16,6 +16,7 @@ public:
 	int128_t(); //implemented
 	int128_t(const std::string&); //implemented
 	int128_t(const int128_t&); //implemented
+	int128_t(uint8_t[BYTE_SIZE]);
 
 
 	void ReadConsoleString(); //implemented
@@ -32,7 +33,7 @@ public:
 	void ToggleBit(const size_t&); //implemented
 	char GetBit(const size_t&); //implemented
 
-	std::string StringToBinary(std::string); //implemented
+	void StringToBinary(std::string); //implemented
 	std::string BinaryToString(); //implemented
 	std::string int128ToDecimal(); //implemented
 	void BigEndianToLittleEndian(); //implemented
