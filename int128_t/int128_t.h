@@ -16,25 +16,24 @@ public:
 	int128_t(); //implemented
 	int128_t(const std::string&); //implemented
 	int128_t(const int128_t&); //implemented
+	int128_t(uint8_t[BYTE_SIZE]);
 
 
 	void ReadConsoleString(); //implemented
 	std::vector<int128_t> ReadTextFile(const std::string&); //implemented
 	std::vector<int128_t> ReadBinaryFile(const std::string&);  //implemented
-	void WriteBinaryFile(const std::string&, std::vector<int128_t>, const bool&);
-	void WriteTextFile(const std::string&, std::vector<int128_t>);
+	void WriteBinaryFile(const std::string&, std::vector<int128_t>, const bool&); //implemented
+	void WriteTextFile(const std::string&, std::vector<int128_t>); //implemented
 
 	void ConvertToTwosComplement(); //implemented ?
-	void PrintBinary(); //implemented
 	void PrintDecimal(); //implemented
-	void PrintHex(); //implemented
 
 	void SetBit(const size_t&); //implemented
 	void UnsetBit(const size_t&); //implemented
 	void ToggleBit(const size_t&); //implemented
 	char GetBit(const size_t&); //implemented
 
-	std::string StringToBinary(std::string); //implemented
+	void StringToBinary(std::string); //implemented
 	std::string BinaryToString(); //implemented
 	std::string int128ToDecimal(); //implemented
 	void BigEndianToLittleEndian(); //implemented
