@@ -2,19 +2,12 @@
 #include <stack>
 #include <vector>
 
-bool isOperator(char c)
-{
-	if (c == '+' || c == '-' || c == '/' || c == '*')
-		return true;
-	return false;
-}
-
 bool isOperand(char c)
 {
 	if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z' || c >= '0' && c <= '9')
 		return true;
-	else
-		return false;
+
+	return false;
 }
 
 int precedence(char op)
@@ -26,69 +19,104 @@ int precedence(char op)
 		return 2;
 	if (op == '^')
 		return 3;
+
+	return -1;
 }
 
-bool equalOrHigher(char op1, char op2)
+std::string infixToPostfix(std::string s)
 {
-	if (precedence(op1) == precedence(op2))
+
+	std::stack<char> st;
+	std::string result;
+
+	for (int i = 0; i < s.length(); i++)
 	{
-		if (op1 == '^')
-			return false;
-
-		return true;
-	}
-
-	return precedence(op1) > precedence(op2) ? true : false;
-
-}
-
-std::string infixToPostfix(std::string infix)
-{
-	std::stack <char> s;
-	std::string postfix = "";
-	char ch;
-
-	s.push('(');
-	infix += ')';
-
-	for (int i = 0; i < infix.length(); i++)
-	{
-		ch = infix[i];
+		char ch = s[i];
 
 		if (ch == ' ')
 			continue;
-		else if (ch == '(')
-			s.push(ch);
 
-		else if (isOperand(ch))
-			postfix += ch;
-
-		else if (isOperator(ch))
+		if (isOperand(ch))
 		{
-			while (!s.empty() && equalOrHigher(s.top(), ch))
-			{
-				if (s.top() == ')')
-					postfix += s.top();
-				s.pop();
-			}
-			s.push(ch);
+			result += ch;
+			result += " ";
 		}
+
+		else if (ch == '(')
+			st.push('(');
+
 		else if (ch == ')')
 		{
-			while (!s.empty() && s.top())
+			while (st.top() != '(')
 			{
-				postfix += s.top();
-				s.pop();
+				result += st.top();
+				st.pop();
 			}
+			st.pop();
+		}
 
+		else
+		{
+			while (!st.empty() && precedence(s[i]) <= precedence(st.top()))
+			{
+				result += st.top();
+				result += " ";
+				st.pop();
+			}
+			result += " ";
+			st.push(ch);
 		}
 	}
-	return postfix;
+
+	while (!st.empty())
+	{
+		result += st.top();
+		st.pop();
+	}
+
+	return result;
 }
+
+int evaluatePostfix(const std::string& expr)
+{
+	std::stack<int> s;
+	for (int i = 0; i < expr.length(); i++)
+	{
+
+		if (isdigit(expr[i]))
+			s.push(expr[i] - '0');
+
+		else if (expr[i] == ' ')
+		{
+			continue;
+		}
+		else
+		{
+			int op2 = s.top();
+			s.pop();
+			int op1 = s.top();
+			s.pop();
+
+			if (expr[i] == '+')
+				s.push(op1 + op2);
+			else if (expr[i] == '-')
+				s.push(op1 - op2);
+			else if (expr[i] == '*')
+				s.push(op1 * op2);
+			else if (expr[i] == '/')
+				s.push(op1 / op2);
+		}
+	}
+	return s.top();
+}
+
 
 int main()
 {
 	std::string infix = "((2+9)*3)-5";
+	std::string infix1 = "2 + 9 * 3- 5";
 
 	std::cout << infixToPostfix(infix) << std::endl;
+	std::cout << infixToPostfix(infix1) << std::endl;
+	std::cout << evaluatePostfix(infixToPostfix(infix1));
 }
